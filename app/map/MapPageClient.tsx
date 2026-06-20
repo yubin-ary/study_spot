@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import mockPlaces, { GeoPoint, Place } from "../data/mockPlaces";
 import { getPlaces } from "../services/placeService";
+import KakaoMapView from "./KakaoMapView";
 
 // Assets
 const imgMap         = "/assets/b8dafec21f636b051f4261f80b461f8e271eb5ab.png";
@@ -373,64 +374,30 @@ export default function MapPageClient() {
   }
 
   const sheetZIndex = sheetTop < 200 ? 22 : 15;
-  const currentLocationPosition = projectGeoPointToStaticMap(MOCK_USER_LOCATION);
+
 
   return (
     <div style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "100vh", background: "#e5e5e5" }}>
       <div style={{ width: 390, height: 844, position: "relative" }}>
         <div style={{ width: "100%", height: "100%", border: "2px solid #111", borderRadius: 25, overflow: "hidden", position: "relative", background: "#fff" }}>
 
-          {/* Map background
-              Later, replace this static image block with a provider component
-              that renders Kakao/Naver map using Place.coordinates. */}
+          {/* Map background — 카카오 지도로 교체 */}
           <div
-            onClick={() => { if (selectedPlace) setSelectedPlace(null); }}
-            style={{ position: "absolute", left: -69, top: 0, width: 524, height: 885, overflow: "hidden", cursor: "default" }}
+            style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }}
           >
-            <img src={imgMap} alt="map" style={{ position: "absolute", height: "100.01%", left: "-112.68%", width: "301.06%", maxWidth: "none", top: 0 }} />
+            <KakaoMapView
+              places={filteredPlaces}
+              selectedPlace={selectedPlace}
+              onSelectPlace={(place) => {
+                setSelectedPlace(place);
+                setIsFilterOpen(false);
+                setIsSnapping(true);
+                setSheetTop(SHEET_DEFAULT);
+              }}
+            />
           </div>
 
-          {/* Current location glow */}
-          <div style={{
-            position: "absolute",
-            left: `${currentLocationPosition.x}%`,
-            top: `${currentLocationPosition.y}%`,
-            transform: "translate(-50%, -50%)",
-            width: 46,
-            height: 46,
-            background: "rgba(255,191,0,0.2)",
-            borderRadius: 23,
-            display: "flex",
-            alignItems: "flex-start",
-            padding: 16,
-            boxSizing: "border-box",
-            zIndex: 4,
-          }}>
-            <div style={{ position: "relative", flexShrink: 0, width: 14, height: 14 }}>
-              <img src={imgEllipse55} alt="" style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }} />
-            </div>
-            <div style={{ position: "absolute", left: 18, top: 18, width: 10, height: 10 }}>
-              <img src={imgEllipse54} alt="" style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }} />
-            </div>
-          </div>
-
-          {/* Place pins */}
-          <div style={{ position: "absolute", inset: 0, zIndex: 6, pointerEvents: "none" }}>
-            {filteredPlaces.map((place) => (
-              <div key={place.id} style={{ pointerEvents: "auto" }}>
-                <PlacePin
-                  place={place}
-                  selected={selectedPlace?.id === place.id}
-                  onClick={() => {
-                    setSelectedPlace(place);
-                    setIsFilterOpen(false);
-                    setIsSnapping(true);
-                    setSheetTop(SHEET_DEFAULT);
-                  }}
-                />
-              </div>
-            ))}
-          </div>
+          {/* 현재위치 글로우 + 정적 핀은 카카오 지도가 마커로 대체하므로 제거 */}
 
           {/* Status bar */}
           <div style={{ position: "absolute", top: 0, left: "50%", transform: "translateX(-50%)", width: 388, height: 43, overflow: "hidden", zIndex: 20 }}>
