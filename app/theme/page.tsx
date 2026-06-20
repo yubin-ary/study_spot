@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import mockPlaces from "../data/mockPlaces";
 
 const imgStatusIcons = "/assets/b655a4944c744b18f533b9c4e87522b5f1e0f728.svg";
+const imgNavBg = "/assets/4870fdf34b871dd7cc5520f60aad475b01c76985.svg";
 
 function IconCompass({ color }: { color: string }) {
   return (
@@ -74,18 +75,31 @@ function countByCategory(islandType: string) {
 }
 
 const NAV_ITEMS = [
-  { label: "추천", Icon: IconCompass, href: "/status/purpose" },
+  { label: "추천", Icon: IconCompass, href: "/status/purpose?from=nav" },
   { label: "지도", Icon: IconMap, href: "/map" },
   { label: "테마섬", Icon: IconIsland, href: "/theme" },
-  { label: "보물함", Icon: IconBookmark, href: "/map" },
+  { label: "보물함", Icon: IconBookmark, href: "/bookmarks" },
 ];
 
 export default function ThemePage() {
   const router = useRouter();
   const [index, setIndex] = useState(0);
+  const touchStartX = useRef<number | null>(null);
 
   const island = ISLANDS[index];
   const counts = countByCategory(island.type);
+
+  function handleTouchStart(e: React.TouchEvent) {
+    touchStartX.current = e.touches[0].clientX;
+  }
+
+  function handleTouchEnd(e: React.TouchEvent) {
+    if (touchStartX.current === null) return;
+    const dx = e.changedTouches[0].clientX - touchStartX.current;
+    if (dx < -40 && index < ISLANDS.length - 1) setIndex(index + 1);
+    else if (dx > 40 && index > 0) setIndex(index - 1);
+    touchStartX.current = null;
+  }
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
@@ -125,67 +139,87 @@ export default function ThemePage() {
             원하는 분위기의 스팟을 탐험해보세요.
           </p>
 
+          {/* Card carousel – centre card + side peek cards */}
           <div
             className="absolute"
-            style={{
-              left: 36, top: 198, width: 318, height: 420,
-              backgroundColor: "#ffc933",
-              borderRadius: 24,
-              boxShadow: "0px 8px 24px rgba(245,166,35,0.25)",
-              padding: "26px 20px 20px",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-            }}
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
+            style={{ left: 0, top: 198, width: 390, height: 430, overflow: "hidden" }}
           >
-            <p style={{ fontSize: 21, fontWeight: 800, color: "#3a2e10", letterSpacing: "-0.5px" }}>{island.type}</p>
-            <p style={{ marginTop: 6, fontSize: 12, fontWeight: 500, color: "#6b5a28", letterSpacing: "-0.3px" }}>{island.subtitle}</p>
+            {ISLANDS.map((isl, i) => {
+              const offset = i - index;          // -1, 0, 1, 2 …
+              const CARD_W = 318;
+              const GAP = 334;                   // centre-to-centre distance
+              const x = offset * GAP;
+              const isActive = offset === 0;
+              const c = countByCategory(isl.type);
+              return (
+                <div
+                  key={isl.type}
+                  onClick={() => { if (!isActive) setIndex(i); }}
+                  style={{
+                    position: "absolute",
+                    top: isActive ? 0 : 16,
+                    left: "50%",
+                    width: CARD_W,
+                    height: isActive ? 420 : 390,
+                    transform: `translateX(calc(-50% + ${x}px))`,
+                    transition: "transform 0.35s cubic-bezier(0.25,0.46,0.45,0.94), top 0.35s, height 0.35s, opacity 0.35s",
+                    backgroundColor: "#ffc933",
+                    borderRadius: 24,
+                    boxShadow: isActive
+                      ? "0px 8px 24px rgba(245,166,35,0.35)"
+                      : "0px 4px 12px rgba(245,166,35,0.18)",
+                    opacity: Math.abs(offset) > 1 ? 0 : isActive ? 1 : 0.75,
+                    padding: "26px 20px 20px",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    cursor: isActive ? "default" : "pointer",
+                    pointerEvents: Math.abs(offset) > 1 ? "none" : "auto",
+                    zIndex: isActive ? 2 : 1,
+                  }}
+                >
+                  <p style={{ fontSize: 21, fontWeight: 800, color: "#3a2e10", letterSpacing: "-0.5px" }}>{isl.type}</p>
+                  <p style={{ marginTop: 6, fontSize: 12, fontWeight: 500, color: "#6b5a28", letterSpacing: "-0.3px" }}>{isl.subtitle}</p>
 
-            <div
-              style={{
-                marginTop: 16, width: 200, height: 170,
-                display: "flex", alignItems: "center", justifyContent: "center",
-              }}
-            >
-              <img
-                src={island.image}
-                alt={island.type}
-                style={{ width: "100%", height: "100%", objectFit: "contain" }}
-              />
-            </div>
+                  <div style={{ marginTop: 16, width: 200, height: 170, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                    <img src={isl.image} alt={isl.type} style={{ width: "100%", height: "100%", objectFit: "contain" }} />
+                  </div>
 
-            <div style={{ marginTop: 18, width: "100%", maxWidth: 240 }}>
-              {island.secret ? (
-                <div style={{ background: "rgba(255,255,255,0.55)", borderRadius: 10, padding: "10px 0", textAlign: "center" }}>
-                  <span style={{ fontSize: 13, fontWeight: 600, color: "#3a2e10" }}>숨겨진 공부명당 {counts.total}</span>
+                  <div style={{ marginTop: 18, width: "100%", maxWidth: 240 }}>
+                    {isl.secret ? (
+                      <div style={{ background: "rgba(255,255,255,0.55)", borderRadius: 10, padding: "10px 0", textAlign: "center" }}>
+                        <span style={{ fontSize: 13, fontWeight: 600, color: "#3a2e10" }}>숨겨진 공부명당 {c.total}</span>
+                      </div>
+                    ) : (
+                      <div style={{ background: "rgba(255,255,255,0.55)", borderRadius: 10, padding: "10px 0", display: "flex" }}>
+                        {[{ label: "카페", n: c.카페 }, { label: "도서관", n: c.도서관 }, { label: "스카", n: c.스카 }].map((ct, ci) => (
+                          <div key={ct.label} style={{ flex: 1, textAlign: "center", borderLeft: ci === 0 ? "none" : "1px solid rgba(58,46,16,0.15)" }}>
+                            <div style={{ fontSize: 11, color: "#6b5a28" }}>{ct.label}</div>
+                            <div style={{ fontSize: 15, fontWeight: 700, color: "#3a2e10", marginTop: 2 }}>{ct.n}</div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                  {isActive && (
+                    <button
+                      onClick={(e) => { e.stopPropagation(); router.push(`/theme/${encodeURIComponent(isl.type)}`); }}
+                      style={{
+                        marginTop: 14, width: "100%", maxWidth: 240, height: 44,
+                        background: "rgba(255,255,255,0.75)", border: "none", borderRadius: 10,
+                        fontSize: 14, fontWeight: 700, color: "#3a2e10", cursor: "pointer",
+                        display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
+                      }}
+                    >
+                      탐험하기 <span style={{ fontSize: 16 }}>›</span>
+                    </button>
+                  )}
                 </div>
-              ) : (
-                <div style={{ background: "rgba(255,255,255,0.55)", borderRadius: 10, padding: "10px 0", display: "flex" }}>
-                  {[
-                    { label: "카페", n: counts.카페 },
-                    { label: "도서관", n: counts.도서관 },
-                    { label: "스카", n: counts.스카 },
-                  ].map((c, i) => (
-                    <div key={c.label} style={{ flex: 1, textAlign: "center", borderLeft: i === 0 ? "none" : "1px solid rgba(58,46,16,0.15)" }}>
-                      <div style={{ fontSize: 11, color: "#6b5a28" }}>{c.label}</div>
-                      <div style={{ fontSize: 15, fontWeight: 700, color: "#3a2e10", marginTop: 2 }}>{c.n}</div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            <button
-              onClick={() => router.push(`/theme/${encodeURIComponent(island.type)}`)}
-              style={{
-                marginTop: 14, width: "100%", maxWidth: 240, height: 44,
-                background: "rgba(255,255,255,0.75)", border: "none", borderRadius: 10,
-                fontSize: 14, fontWeight: 700, color: "#3a2e10", cursor: "pointer",
-                display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
-              }}
-            >
-              탐험하기 <span style={{ fontSize: 16 }}>›</span>
-            </button>
+              );
+            })}
           </div>
 
           <div className="absolute" style={{ left: 0, right: 0, top: 636, display: "flex", justifyContent: "center", gap: 7 }}>
@@ -202,24 +236,32 @@ export default function ThemePage() {
             ))}
           </div>
 
-          <div className="absolute" style={{ left: 0, right: 0, bottom: 0, height: 80, background: "#fff", borderTop: "1px solid #eee", display: "flex", paddingBottom: 18 }}>
-            {NAV_ITEMS.map((item) => {
-              const active = item.label === "테마섬";
-              const color = active ? "#f5a623" : "#b0b0b0";
-              return (
-                <button
-                  key={item.label}
-                  onClick={() => router.push(item.href)}
-                  style={{ flex: 1, border: "none", background: "none", cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 4, paddingTop: 10 }}
-                >
-                  <item.Icon color={color} />
-                  <span style={{ fontSize: 11, color, fontWeight: active ? 700 : 500 }}>{item.label}</span>
-                </button>
-              );
-            })}
+          {/* Nav – 지도 페이지와 동일한 스타일 */}
+          <div className="absolute" style={{ left: 0, right: 0, top: 745, height: 63 }}>
+            <div style={{ position: "absolute", left: -2, right: -2, top: -7, height: 70 }}>
+              <img src={imgNavBg} alt="" style={{ width: "100%", height: "100%", display: "block" }} />
+            </div>
+            <div style={{ position: "relative", display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", alignItems: "center", height: "100%", padding: "4px 0 0 0" }}>
+              {NAV_ITEMS.map((item) => {
+                const active = item.label === "테마섬";
+                const color = active ? "#525252" : "#aeaeae";
+                return (
+                  <button
+                    key={item.label}
+                    onClick={() => router.push(item.href)}
+                    style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 0, background: "none", border: "none", cursor: "pointer", padding: 0 }}
+                  >
+                    <item.Icon color={color} />
+                    <span style={{ fontSize: 14, fontWeight: 500, color, letterSpacing: "-0.35px", lineHeight: 1.5, marginTop: 1 }}>{item.label}</span>
+                  </button>
+                );
+              })}
+            </div>
           </div>
 
-          <div className="absolute" style={{ bottom: 8, left: "50%", transform: "translateX(-50%)", width: 134, height: 5, backgroundColor: "#111", borderRadius: 100 }} />
+          {/* 네비바 아래 여백 */}
+          <div className="absolute" style={{ left: 0, right: 0, top: 808, bottom: 0, background: "#fff", borderRadius: "0 0 25px 25px" }} />
+
         </div>
       </div>
     </div>

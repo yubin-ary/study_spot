@@ -203,7 +203,6 @@ export default function OnboardingPage() {
         </button>
 
         {/* Home Indicator */}
-        <div className="absolute" style={{ bottom: 8, left: "50%", transform: "translateX(-50%)", width: 134, height: 5, borderRadius: 100, backgroundColor: "#111" }} />
       </div>
     </div>
   );

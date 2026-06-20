@@ -121,10 +121,10 @@ function IconPerson({ color }: { color: string }) {
 }
 
 const NAV_ITEMS = [
-  { label: "추천",  Icon: IconCompass,   active: false, href: "/status/purpose" },
+  { label: "추천",  Icon: IconCompass,   active: false, href: "/status/purpose?from=nav" },
   { label: "지도",  Icon: IconMap,       active: true,  href: "/map" },
-  { label: "테마섬", Icon: IconIsland,   active: false, href: "/map" },
-  { label: "보물함", Icon: IconBookmark, active: false, href: "/map" },
+  { label: "테마섬", Icon: IconIsland,   active: false, href: "/theme" },
+  { label: "보물함", Icon: IconBookmark, active: false, href: "/bookmarks" },
 ];
 
 function PlacePin({ place, selected, onClick }: { place: Place; selected: boolean; onClick: () => void }) {
@@ -292,6 +292,7 @@ export default function MapPageClient() {
   });
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [selectedFilter, setSelectedFilter] = useState("전체 보물함");
+  const [searchQuery, setSearchQuery] = useState("");
   const [sheetTop, setSheetTop] = useState(() =>
     searchParams.get("selected") ? SHEET_DEFAULT : SHEET_DEFAULT
   );
@@ -345,7 +346,12 @@ export default function MapPageClient() {
 
   const filteredPlaces = mockPlaces.filter((p) => {
     if (recommendedIds) return recommendedIds.includes(p.id);
-    return selectedFilter === "전체 보물함" ? true : p.treasureType === selectedFilter;
+    const matchesFilter = selectedFilter === "전체 보물함" ? true : p.treasureType === selectedFilter;
+    const q = searchQuery.trim();
+    const matchesSearch = q === "" ? true :
+      p.name.includes(q) || p.category.includes(q) || p.address.includes(q) ||
+      (p.treasureType ?? "").includes(q) || p.visitTags.some(t => t.includes(q));
+    return matchesFilter && matchesSearch;
   });
 
   function dismissRecommendation() {
@@ -438,8 +444,20 @@ export default function MapPageClient() {
           <div style={{ position: "absolute", top: 106, left: "50%", transform: "translateX(-50%)", width: 342, zIndex: 20 }}>
             <div style={{ background: "#fff", borderRadius: 100, boxShadow: "0px 2px 2px rgba(0,0,0,0.2)", display: "flex", alignItems: "center", padding: "11px 16px", gap: 8 }}>
               <span style={{ fontSize: 17, color: "#767676" }}>🔍</span>
-              <span style={{ fontSize: 14, color: "#767676", flex: 1, letterSpacing: "-0.08px" }}>장소를 검색해보세요</span>
-              <span style={{ fontSize: 17, color: "#767676" }}>🎙️</span>
+              <input
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="장소를 검색해보세요"
+                style={{
+                  flex: 1, border: "none", outline: "none", background: "transparent",
+                  fontSize: 14, color: "#111", letterSpacing: "-0.08px",
+                }}
+              />
+              {searchQuery ? (
+                <button onClick={() => setSearchQuery("")} style={{ background: "none", border: "none", cursor: "pointer", fontSize: 16, color: "#aaa", padding: 0 }}>✕</button>
+              ) : (
+                <span style={{ fontSize: 17, color: "#767676" }}>🎙️</span>
+              )}
             </div>
           </div>
 
@@ -618,7 +636,6 @@ export default function MapPageClient() {
 
           {/* Home indicator */}
           <div style={{ position: "absolute", bottom: -2, left: "50%", transform: "translateX(-50%)", width: 390, height: 34, overflow: "hidden", zIndex: 26 }}>
-            <div style={{ position: "absolute", bottom: 8, left: "50%", transform: "translateX(-50%)", width: 134, height: 5, background: "#111", borderRadius: 100 }} />
           </div>
 
         </div>

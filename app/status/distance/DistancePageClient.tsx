@@ -54,7 +54,6 @@ function RecommendationLoadingScreen() {
           </div>
 
           <div className="absolute overflow-clip" style={{ bottom: -2, left: "50%", transform: "translateX(-50%)", width: 390, height: 34 }}>
-            <div className="absolute rounded-[100px]" style={{ bottom: 8, left: "50%", transform: "translateX(-50%)", width: 134, height: 5, backgroundColor: "#111" }} />
           </div>
         </div>
       </div>
@@ -181,7 +180,6 @@ export default function DistancePageClient() {
 
           {/* Home indicator */}
           <div className="absolute overflow-clip" style={{ bottom: -2, left: "50%", transform: "translateX(-50%)", width: 390, height: 34 }}>
-            <div className="absolute rounded-[100px]" style={{ bottom: 8, left: "50%", transform: "translateX(-50%)", width: 134, height: 5, backgroundColor: "#111" }} />
           </div>
         </div>
       </div>

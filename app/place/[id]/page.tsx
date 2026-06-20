@@ -1,8 +1,9 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { use } from "react";
+import { use, useState, useEffect } from "react";
 import mockPlaces, { Place } from "../../data/mockPlaces";
+import { getReviews, type Review } from "../../services/reviewService";
 
 // Assets
 const imgStatusIcons = "/assets/b655a4944c744b18f533b9c4e87522b5f1e0f728.svg";
@@ -59,10 +60,10 @@ function IconIsland({ color }: { color: string }) {
 }
 
 const NAV_ITEMS = [
-  { label: "추천",  Icon: IconCompass,  active: false },
-  { label: "지도",  Icon: IconMap,      active: false },
-  { label: "테마섬", Icon: IconIsland,  active: false },
-  { label: "보물함", Icon: IconBookmarkOutline, active: false },
+  { label: "추천",  Icon: IconCompass,  href: "/status/purpose?from=nav" },
+  { label: "지도",  Icon: IconMap,      href: "/map" },
+  { label: "테마섬", Icon: IconIsland,  href: "/theme" },
+  { label: "보물함", Icon: IconBookmarkOutline, href: "/bookmarks" },
 ];
 
 const MOCK_REVIEWS = [
@@ -79,11 +80,32 @@ const SPOT_INFO = [
 
 const TOP_TAGS = [["분위기 좋음", "화장실 깨끗함", "소음 보통"], ["가성비", "여유좌석 보통"]];
 
+const STORAGE_KEY = "spotyu_saved_places";
+
+function getSaved(): number[] {
+  if (typeof window === "undefined") return [];
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY) ?? "[]"); } catch { return []; }
+}
+
 export default function PlaceDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const router = useRouter();
   const { id } = use(params);
   const place: Place = mockPlaces.find((p) => String(p.id) === id) ?? mockPlaces[0];
   const cat = CATEGORY_COLORS[place.category] ?? { bg: "#f0f0f0", text: "#666" };
+  const [saved, setSaved] = useState(false);
+  const [reviews, setReviews] = useState<Review[]>([]);
+
+  useEffect(() => {
+    setSaved(getSaved().includes(place.id));
+    getReviews(String(place.id)).then(setReviews);
+  }, [place.id]);
+
+  function toggleSave() {
+    const list = getSaved();
+    const next = list.includes(place.id) ? list.filter((x) => x !== place.id) : [...list, place.id];
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+    setSaved(next.includes(place.id));
+  }
 
   return (
     <div style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "100vh", background: "#e5e5e5" }}>
@@ -102,7 +124,7 @@ export default function PlaceDetailPage({ params }: { params: Promise<{ id: stri
               {/* Name + category */}
               <div style={{ margin: "16px 35px 0", display: "flex", alignItems: "center", gap: 8 }}>
                 <span style={{ fontSize: 24, fontWeight: 600, color: "#111", letterSpacing: "-0.6px", lineHeight: 1.5 }}>{place.name}</span>
-                <span style={{ fontSize: 10, fontWeight: 500, color: cat.text, background: cat.bg, borderRadius: 6, padding: "2px 12px", letterSpacing: "-0.25px", lineHeight: 1.3 }}>
+                <span style={{ fontSize: 10, fontWeight: 500, color: cat.text, background: cat.bg, borderRadius: 6, padding: "2px 12px", letterSpacing: "-0.25px", lineHeight: 1.3, whiteSpace: "nowrap", flexShrink: 0 }}>
                   {place.category}
                 </span>
               </div>
@@ -197,31 +219,40 @@ export default function PlaceDetailPage({ params }: { params: Promise<{ id: stri
 
                 <div style={{ margin: "0 35px", background: "#f8f8f8", borderRadius: 10, padding: "16px" }}>
                   <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-                    {MOCK_REVIEWS.map((review, i) => (
-                      <div key={i}>
-                        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
-                          <div style={{ width: 32, height: 32, borderRadius: "50%", overflow: "hidden", flexShrink: 0 }}>
-                            <img src={imgAvatar} alt="" style={{ width: "100%", height: "100%" }} />
+                    {reviews.length === 0 ? (
+                      <p style={{ fontSize: 13, color: "#aeaeae", textAlign: "center", padding: "12px 0" }}>아직 후기가 없어요.</p>
+                    ) : reviews.map((review, i) => {
+                      const tags = [
+                        ...(review.seats ? [`여유좌석 ${review.seats}`] : []),
+                        ...(review.noise ? [`소음 ${review.noise}`] : []),
+                        ...review.keywords,
+                      ];
+                      return (
+                        <div key={i}>
+                          <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
+                            <div style={{ width: 32, height: 32, borderRadius: "50%", overflow: "hidden", flexShrink: 0 }}>
+                              <img src={imgAvatar} alt="" style={{ width: "100%", height: "100%" }} />
+                            </div>
+                            <div>
+                              <p style={{ fontSize: 12, color: "#767676", letterSpacing: "-0.3px", lineHeight: 1.5 }}>방문자</p>
+                              <p style={{ fontSize: 12, color: "#aeaeae", letterSpacing: "-0.3px", lineHeight: 1.5 }}>{review.visitDate}</p>
+                            </div>
                           </div>
-                          <div>
-                            <p style={{ fontSize: 12, color: "#767676", letterSpacing: "-0.3px", lineHeight: 1.5 }}>{review.name}</p>
-                            <p style={{ fontSize: 12, color: "#aeaeae", letterSpacing: "-0.3px", lineHeight: 1.5 }}>{review.date}</p>
+                          <div style={{ display: "flex", gap: 4, flexWrap: "wrap" }}>
+                            {tags.map((tag) => (
+                              <span key={tag} style={{
+                                background: "#fff2cb", border: "1px solid #ffbf00",
+                                borderRadius: 20, padding: "6px 20px",
+                                fontSize: 13, fontWeight: 500, color: "#525252", letterSpacing: "-0.26px", whiteSpace: "nowrap",
+                              }}>
+                                {tag}
+                              </span>
+                            ))}
                           </div>
+                          {i < reviews.length - 1 && <div style={{ height: 1, background: "#e8e8e8", margin: "12px 0 0" }} />}
                         </div>
-                        <div style={{ display: "flex", gap: 4, flexWrap: "wrap" }}>
-                          {review.tags.map((tag) => (
-                            <span key={tag} style={{
-                              background: "#fff2cb", border: "1px solid #ffbf00",
-                              borderRadius: 20, padding: "6px 20px",
-                              fontSize: 13, fontWeight: 500, color: "#525252", letterSpacing: "-0.26px", whiteSpace: "nowrap",
-                            }}>
-                              {tag}
-                            </span>
-                          ))}
-                        </div>
-                        {i < MOCK_REVIEWS.length - 1 && <div style={{ height: 1, background: "#e8e8e8", margin: "12px 0 0" }} />}
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 </div>
               </div>
@@ -240,59 +271,66 @@ export default function PlaceDetailPage({ params }: { params: Promise<{ id: stri
           {/* Fixed: Header */}
           <div style={{ position: "absolute", top: 43, left: 0, right: 0, height: 56, zIndex: 30, background: "#fff", display: "flex", alignItems: "center", justifyContent: "center" }}>
             <button
-              onClick={() => router.push(`/map?selected=${place.id}`)}
+              onClick={() => window.history.length > 1 ? router.back() : router.push('/map')}
               style={{ position: "absolute", left: 20, background: "none", border: "none", padding: 0, cursor: "pointer", width: 28, height: 28, display: "flex", alignItems: "center", justifyContent: "center" }}
             >
               <img src={imgChevronLeft} alt="back" style={{ width: "100%", height: "100%" }} />
             </button>
             <span style={{ fontSize: 20, fontWeight: 600, color: "#111", letterSpacing: "-0.5px" }}>장소상세</span>
-            <div style={{ position: "absolute", right: 24, width: 24, height: 24, background: "#aeaeae", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center" }}>
-              <IconBookmarkOutline color="#fff" />
-            </div>
+            <button
+              onClick={toggleSave}
+              style={{
+                position: "absolute", right: 24, width: 24, height: 24,
+                background: saved ? "#ffbf00" : "#aeaeae",
+                borderRadius: "50%", border: "none", cursor: "pointer",
+                display: "flex", alignItems: "center", justifyContent: "center",
+                transition: "background 0.2s",
+              }}
+            >
+              <svg width="14" height="17" viewBox="0 0 14 17" fill="none">
+                <path
+                  d="M2 1.5h10v14L7 12 2 15.5V1.5Z"
+                  stroke="#fff" strokeWidth="1.4" strokeLinejoin="round"
+                  fill={saved ? "#fff" : "none"}
+                />
+              </svg>
+            </button>
           </div>
 
           {/* Fixed: Bottom CTA + Nav */}
           <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, zIndex: 30 }}>
             {/* CTA button */}
-            <div style={{ padding: "12px 24px 0", background: "#fff" }}>
+            <div style={{ padding: "12px 24px 0" }}>
               <button
+                onClick={() => router.push(`/place/${place.id}/review`)}
                 style={{
                   width: "100%", height: 60, background: "#ffbf00", borderRadius: 10,
                   border: "none", fontSize: 16, fontWeight: 600, color: "#111",
                   letterSpacing: "-0.4px", cursor: "pointer",
                 }}
               >
-                이 장소로 선택하기
+                방문기록 작성하기
               </button>
             </div>
 
-            {/* Nav bar */}
-            <div style={{ position: "relative", height: 83, background: "transparent" }}>
-              {/* White base behind wave */}
-              <div style={{ position: "absolute", inset: 0, background: "#fff" }} />
-              {/* Wave SVG */}
-              <div style={{ position: "absolute", top: -7, left: -10, width: 410, height: 77 }}>
-                <img src={imgNavBg} alt="" style={{ width: "100%", height: "100%" }} />
+            {/* Nav bar – 지도 페이지와 동일한 스타일 */}
+            <div style={{ position: "relative", height: 63 }}>
+              <div style={{ position: "absolute", left: -2, right: -2, top: -7, height: 70 }}>
+                <img src={imgNavBg} alt="" style={{ width: "100%", height: "100%", display: "block" }} />
               </div>
-              {/* Nav items */}
-              <div style={{ position: "absolute", top: 5, left: 0, right: 0, display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr" }}>
-                {NAV_ITEMS.map(({ label, Icon, active }) => (
-                  <div key={label} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 2, paddingTop: 4 }}>
-                    <Icon color={active ? "#525252" : "#aeaeae"} />
-                    <span style={{ fontSize: 14, fontWeight: 500, color: active ? "#525252" : "#aeaeae", letterSpacing: "-0.4px", lineHeight: 1.5 }}>
-                      {label}
-                    </span>
-                  </div>
+              <div style={{ position: "relative", display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", alignItems: "center", height: "100%", padding: "4px 0 0 0" }}>
+                {NAV_ITEMS.map(({ label, Icon, href }) => (
+                  <button key={label} onClick={() => router.push(href)} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 0, background: "none", border: "none", cursor: "pointer", padding: 0 }}>
+                    <Icon color="#aeaeae" />
+                    <span style={{ fontSize: 14, fontWeight: 500, color: "#aeaeae", letterSpacing: "-0.35px", lineHeight: 1.5, marginTop: 1 }}>{label}</span>
+                  </button>
                 ))}
               </div>
             </div>
 
-            {/* Home indicator */}
-            <div style={{ background: "#fff", height: 34, display: "flex", alignItems: "center", justifyContent: "center", borderRadius: "0 0 25px 25px" }}>
-              <div style={{ width: 134, height: 5, borderRadius: 100, background: "#111" }} />
-            </div>
           </div>
 
+          <div style={{ height: 34, borderRadius: "0 0 25px 25px" }} />
         </div>
       </div>
     </div>

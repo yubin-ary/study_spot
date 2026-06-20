@@ -1,10 +1,19 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import mockPlaces, { Place } from "../data/mockPlaces";
 
+const STORAGE_KEY = "spotyu_saved_places";
+function getSavedIds(): number[] {
+  if (typeof window === "undefined") return [];
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY) ?? "[]"); } catch { return []; }
+}
+
 const imgStatusIcons = "/assets/b655a4944c744b18f533b9c4e87522b5f1e0f728.svg";
+const imgChevronRight = "/assets/d87c43c80e992a0641ded1887d61e2df8dcd2d62.svg";
+const imgNavBg = "/assets/4870fdf34b871dd7cc5520f60aad475b01c76985.svg";
+const imgDivider = "/assets/a90fc2e1380e556a9f90746c725a57a7a370ee91.svg";
 
 function IconCompass({ color }: { color: string }) {
   return (
@@ -67,46 +76,67 @@ function BookmarkCard({ place, onClick }: { place: Place; onClick: () => void })
     <div
       onClick={onClick}
       style={{
-        width: "100%", background: "#fffdf7", border: "1px solid #f2ead4",
-        borderRadius: 14, padding: 14, boxSizing: "border-box", cursor: "pointer", position: "relative",
+        width: "100%", height: 158, flexShrink: 0, background: "#fff",
+        border: "1px solid #ffe38e", borderRadius: 10,
+        boxSizing: "border-box", cursor: "pointer", position: "relative",
+        overflow: "hidden",
       }}
     >
-      <div style={{ position: "absolute", top: 14, right: 14, display: "flex", alignItems: "center", gap: 3 }}>
-        <span style={{ fontSize: 11, color: "#9a9a9a" }}>더보기</span>
-        <span style={{ fontSize: 12, color: "#9a9a9a" }}>›</span>
-      </div>
-
-      <div style={{ display: "flex", gap: 12 }}>
-        <div style={{ width: 64, height: 64, borderRadius: 10, overflow: "hidden", flexShrink: 0, background: "#eee" }}>
-          <img src={place.imageUrl} alt={place.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-        </div>
-        <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap" }}>
-            <span style={{ fontSize: 15, fontWeight: 700, color: "#1a1a1a", letterSpacing: "-0.3px" }}>{place.name}</span>
-            {place.treasureType && (
-              <span style={{ fontSize: 10, fontWeight: 600, color: "#d29d00", background: "#fff2cb", borderRadius: 5, padding: "1px 7px" }}>
-                {place.treasureType}
-              </span>
-            )}
-          </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 4, marginTop: 4 }}>
-            <span style={{ fontSize: 11, color: "#8a8a8a" }}>🕐</span>
-            <span style={{ fontSize: 11, color: "#8a8a8a", letterSpacing: "-0.3px" }}>
-              평일 {place.weekdayHours} / 주말 {place.weekendHours}
-            </span>
-          </div>
+      {/* 더보기 */}
+      <div style={{ position: "absolute", top: 16, right: 8, display: "flex", alignItems: "center", gap: 3 }}>
+        <span style={{ fontSize: 12, fontWeight: 500, color: "#525252", letterSpacing: "-0.3px" }}>더보기</span>
+        <div style={{ transform: "rotate(180deg)", width: 5, height: 10 }}>
+          <img src={imgChevronRight} alt="" style={{ width: "100%", height: "100%" }} />
         </div>
       </div>
 
-      <div style={{ display: "flex", marginTop: 12, background: "#fbf6e8", borderRadius: 8, overflow: "hidden" }}>
+      {/* Left image – narrow vertical */}
+      <div style={{ position: "absolute", left: 16, top: 16, width: 58, height: 126, borderRadius: 5, overflow: "hidden", background: "#eee" }}>
+        <img src={place.imageUrl} alt={place.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+      </div>
+
+      {/* Island type badge */}
+      {place.treasureType && (
+        <div style={{
+          position: "absolute", left: 89, top: 16,
+          background: "#ffc822", borderRadius: 23, padding: "3px 14px",
+          display: "inline-flex", alignItems: "center",
+        }}>
+          <span style={{ fontSize: 10, fontWeight: 500, color: "#565656", letterSpacing: "-0.25px", whiteSpace: "nowrap" }}>
+            {place.treasureType}
+          </span>
+        </div>
+      )}
+
+      {/* Place name */}
+      <div style={{ position: "absolute", left: 89, top: 37, right: 16 }}>
+        <p style={{ fontSize: 16, fontWeight: 600, color: "#111", letterSpacing: "-0.4px", lineHeight: 1.5, margin: 0 }}>
+          {place.name}
+        </p>
+      </div>
+
+      {/* Hours */}
+      <div style={{ position: "absolute", left: 89, top: 63, right: 16, display: "flex", alignItems: "center", gap: 6 }}>
+        <span style={{ fontSize: 12, color: "#767676" }}>🕐</span>
+        <span style={{ fontSize: 12, color: "#767676", letterSpacing: "-0.3px", lineHeight: 1.3, whiteSpace: "nowrap" }}>
+          평일 {place.weekdayHours} / 주말 {place.weekendHours}
+        </span>
+      </div>
+
+      {/* Info box */}
+      <div style={{
+        position: "absolute", left: 89, right: 21, top: 103,
+        background: "#fff8e6", borderRadius: 9, padding: "6px 0",
+        display: "flex",
+      }}>
         {[
-          { icon: "🔈", label: "소음도", value: place.noiseLevel },
-          { icon: "🏠", label: "규모", value: place.size },
-          { icon: "✨", label: "집중도", value: place.cleanliness },
+          { label: "소음도", value: place.noiseLevel },
+          { label: "규모",   value: place.size },
+          { label: "집중도", value: place.cleanliness },
         ].map((m, i) => (
-          <div key={m.label} style={{ flex: 1, textAlign: "center", padding: "6px 0", borderLeft: i === 0 ? "none" : "1px solid #eee2c4" }}>
-            <div style={{ fontSize: 10, color: "#a08a4a" }}>{m.icon} {m.label}</div>
-            <div style={{ fontSize: 12, fontWeight: 700, color: "#3a2e10", marginTop: 2 }}>{m.value}</div>
+          <div key={m.label} style={{ flex: 1, textAlign: "center", borderLeft: i === 0 ? "none" : "1px solid #e8d9a0" }}>
+            <div style={{ fontSize: 9, color: "#d29d00", letterSpacing: "-0.225px", fontWeight: 500 }}>{m.label}</div>
+            <div style={{ fontSize: 12, fontWeight: 500, color: "#636363", marginTop: 2, letterSpacing: "-0.3px" }}>{m.value}</div>
           </div>
         ))}
       </div>
@@ -115,21 +145,36 @@ function BookmarkCard({ place, onClick }: { place: Place; onClick: () => void })
 }
 
 const NAV_ITEMS = [
-  { label: "추천", Icon: IconCompass, href: "/status/purpose" },
+  { label: "추천", Icon: IconCompass, href: "/status/purpose?from=nav" },
   { label: "지도", Icon: IconMap, href: "/map" },
   { label: "테마섬", Icon: IconIsland, href: "/theme" },
   { label: "보물함", Icon: IconBookmark, href: "/bookmarks" },
 ];
 
-const FILTERS = ["전체", "가성비섬", "밤샘섬"];
-
 export default function BookmarksPage() {
   const router = useRouter();
   const [filter, setFilter] = useState("전체");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [savedIds, setSavedIds] = useState<number[]>([]);
 
-  // TODO: 백엔드 연동 시 "사용자가 저장한 장소" API로 교체.
-  const saved = mockPlaces;
-  const filtered = filter === "전체" ? saved : saved.filter((p) => p.treasureType === filter);
+  useEffect(() => {
+    setSavedIds(getSavedIds());
+  }, []);
+
+  const saved = mockPlaces.filter((p) => savedIds.includes(p.id));
+
+  const islandTypes = Array.from(
+    new Set(saved.map((p) => p.treasureType).filter(Boolean) as string[])
+  );
+  const filters = ["전체", ...islandTypes];
+  const filtered = saved.filter((p) => {
+    const matchesFilter = filter === "전체" ? true : p.treasureType === filter;
+    const q = searchQuery.trim();
+    const matchesSearch = q === "" ? true :
+      p.name.includes(q) || p.category.includes(q) || p.address.includes(q) ||
+      (p.treasureType ?? "").includes(q) || p.visitTags.some(t => t.includes(q));
+    return matchesFilter && matchesSearch;
+  });
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
@@ -160,13 +205,25 @@ export default function BookmarksPage() {
           <div className="absolute" style={{ top: 100, left: "50%", transform: "translateX(-50%)", width: 342 }}>
             <div style={{ background: "#fff", borderRadius: 100, boxShadow: "0px 2px 2px rgba(0,0,0,0.15)", display: "flex", alignItems: "center", padding: "11px 16px", gap: 8 }}>
               <span style={{ fontSize: 16, color: "#9a9a9a" }}>🔍</span>
-              <span style={{ fontSize: 14, color: "#9a9a9a", flex: 1, letterSpacing: "-0.3px" }}>찾고 싶은 장소를 입력해주세요</span>
-              <span style={{ fontSize: 16, color: "#9a9a9a" }}>🎙️</span>
+              <input
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="찾고 싶은 장소를 입력해주세요"
+                style={{
+                  flex: 1, border: "none", outline: "none", background: "transparent",
+                  fontSize: 14, color: "#111", letterSpacing: "-0.3px",
+                }}
+              />
+              {searchQuery ? (
+                <button onClick={() => setSearchQuery("")} style={{ background: "none", border: "none", cursor: "pointer", fontSize: 14, color: "#aaa", padding: 0 }}>✕</button>
+              ) : (
+                <span style={{ fontSize: 16, color: "#9a9a9a" }}>🎙️</span>
+              )}
             </div>
           </div>
 
           <div className="absolute" style={{ top: 158, left: 24, right: 24, display: "flex", alignItems: "center", gap: 8 }}>
-            {FILTERS.map((f) => {
+            {filters.map((f) => {
               const active = filter === f;
               return (
                 <button
@@ -200,35 +257,40 @@ export default function BookmarksPage() {
           >
             {filtered.length === 0 ? (
               <p style={{ textAlign: "center", color: "#9a9a9a", fontSize: 14, marginTop: 40 }}>
-                저장한 장소가 없어요.
+                {saved.length === 0 ? "저장한 장소가 없어요." : "검색 결과가 없어요."}
               </p>
             ) : (
-              filtered.map((place) => (
+              filtered.map((place) =>
                 <BookmarkCard key={place.id} place={place} onClick={() => router.push(`/place/${place.id}`)} />
-              ))
+              )
             )}
           </div>
 
-          <div className="absolute" style={{ left: 0, right: 0, bottom: 0, height: 80, background: "#fff", borderTop: "1px solid #eee", display: "flex", paddingBottom: 18 }}>
-            {NAV_ITEMS.map((item) => {
-              const active = item.label === "보물함";
-              const color = active ? "#f5a623" : "#b0b0b0";
-              return (
-                <button
-                  key={item.label}
-                  onClick={() => router.push(item.href)}
-                  style={{ flex: 1, border: "none", background: "none", cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 4, paddingTop: 10 }}
-                >
-                  {item.label === "보물함"
-                    ? <IconBookmark color={color} filled={active} />
-                    : <item.Icon color={color} />}
-                  <span style={{ fontSize: 11, color, fontWeight: active ? 700 : 500 }}>{item.label}</span>
-                </button>
-              );
-            })}
+          {/* Nav – 지도 페이지와 동일한 스타일 */}
+          <div className="absolute" style={{ left: 0, right: 0, top: 745, height: 63 }}>
+            <div style={{ position: "absolute", left: -2, right: -2, top: -7, height: 70 }}>
+              <img src={imgNavBg} alt="" style={{ width: "100%", height: "100%", display: "block" }} />
+            </div>
+            <div style={{ position: "relative", display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", alignItems: "center", height: "100%", padding: "4px 0 0 0" }}>
+              {NAV_ITEMS.map((item) => {
+                const active = item.label === "보물함";
+                const color = active ? "#525252" : "#aeaeae";
+                return (
+                  <button
+                    key={item.label}
+                    onClick={() => router.push(item.href)}
+                    style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 0, background: "none", border: "none", cursor: "pointer", padding: 0 }}
+                  >
+                    {item.label === "보물함"
+                      ? <IconBookmark color={color} filled={active} />
+                      : <item.Icon color={color} />}
+                    <span style={{ fontSize: 14, fontWeight: 500, color, letterSpacing: "-0.35px", lineHeight: 1.5, marginTop: 1 }}>{item.label}</span>
+                  </button>
+                );
+              })}
+            </div>
           </div>
 
-          <div className="absolute" style={{ bottom: 8, left: "50%", transform: "translateX(-50%)", width: 134, height: 5, backgroundColor: "#111", borderRadius: 100 }} />
         </div>
       </div>
     </div>

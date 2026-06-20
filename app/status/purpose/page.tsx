@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 const imgStatusIcons = "/assets/cf8adf0c371ee4bab6d9c27869714c5a52b939c5.svg";
@@ -29,7 +29,12 @@ const options = [
 
 export default function PurposePage() {
   const [selected, setSelected] = useState<number | null>(null);
+  const [showBack, setShowBack] = useState(false);
   const router = useRouter();
+
+  useEffect(() => {
+    setShowBack(new URLSearchParams(window.location.search).get("from") === "nav");
+  }, []);
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
@@ -50,6 +55,20 @@ export default function PurposePage() {
 
           {/* Header */}
           <div className="absolute" style={{ top: 45, left: 0, right: 0, height: 56 }}>
+            {showBack && (
+              <button
+                onClick={() => router.push("/map")}
+                style={{
+                  position: "absolute", left: 16, top: "50%", transform: "translateY(-50%)",
+                  background: "none", border: "none", cursor: "pointer", padding: "8px",
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                }}
+              >
+                <svg width="10" height="18" viewBox="0 0 10 18" fill="none">
+                  <path d="M9 1L1 9L9 17" stroke="#111" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </button>
+            )}
             <p className="absolute text-center" style={{ left: "50%", transform: "translateX(-50%)", top: 14, fontSize: 22, fontWeight: 500, letterSpacing: 0, color: "#111", whiteSpace: "nowrap", lineHeight: 1.5 }}>
               추천
             </p>
@@ -121,7 +140,6 @@ export default function PurposePage() {
 
           {/* Home indicator */}
           <div className="absolute overflow-clip" style={{ bottom: -2, left: "50%", transform: "translateX(-50%)", width: 390, height: 34 }}>
-            <div className="absolute rounded-[100px]" style={{ bottom: 8, left: "50%", transform: "translateX(-50%)", width: 134, height: 5, backgroundColor: "#111" }} />
           </div>
         </div>
       </div>
