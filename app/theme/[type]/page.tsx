@@ -3,6 +3,7 @@
 import { use, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import mockPlaces, { Place } from "../../data/mockPlaces";
+import { getPlaces } from "../../services/placeService";
 
 const imgStatusIcons = "/assets/b655a4944c744b18f533b9c4e87522b5f1e0f728.svg";
 const imgBackArrow   = "/assets/45d8a0f6495680e676880af5da9c876d1c9d332b.svg";
@@ -117,8 +118,14 @@ export default function IslandPage({ params }: { params: Promise<{ type: string 
   const router = useRouter();
   const { type } = use(params);
   const islandName = decodeURIComponent(type);
-  const places = mockPlaces.filter((p) => p.treasureType === islandName);
+  const [places, setPlaces] = useState<Place[]>([]);
   const [savedIds, setSavedIds] = useState<number[]>([]);
+
+  useEffect(() => {
+    getPlaces()
+      .then((all) => setPlaces(all.filter((p) => p.treasureType === islandName)))
+      .catch((err) => console.error("장소 목록 로딩 실패:", err));
+  }, [islandName]);
 
   useEffect(() => {
     setSavedIds(getSavedIds());

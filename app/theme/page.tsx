@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import mockPlaces from "../data/mockPlaces";
+import { Place } from "../data/mockPlaces";
+import { getPlaces } from "../services/placeService";
 
 const imgStatusIcons = "/assets/b655a4944c744b18f533b9c4e87522b5f1e0f728.svg";
 const imgNavBg = "/assets/4870fdf34b871dd7cc5520f60aad475b01c76985.svg";
@@ -64,13 +65,13 @@ const ISLANDS = [
   { type: "비밀섬", subtitle: "아는 사람만 아는 공부명당", secret: true, image: "/assets/island-secret.png" },
 ] as const;
 
-function countByCategory(islandType: string) {
-  const places = mockPlaces.filter((p) => p.treasureType === islandType);
+function countByCategory(places: Place[], islandType: string) {
+  const filtered = places.filter((p) => p.treasureType === islandType);
   return {
-    total: places.length,
-    카페: places.filter((p) => p.category === "카페").length,
-    도서관: places.filter((p) => p.category === "도서관").length,
-    스카: places.filter((p) => p.category === "스터디카페").length,
+    total: filtered.length,
+    카페: filtered.filter((p) => p.category === "카페").length,
+    도서관: filtered.filter((p) => p.category === "도서관").length,
+    스카: filtered.filter((p) => p.category === "스터디카페").length,
   };
 }
 
@@ -86,8 +87,16 @@ export default function ThemePage() {
   const [index, setIndex] = useState(0);
   const touchStartX = useRef<number | null>(null);
 
+  const [places, setPlaces] = useState<Place[]>([]);
+
+  useEffect(() => {
+    getPlaces()
+      .then((data) => setPlaces(data))
+      .catch((err) => console.error("장소 목록 로딩 실패:", err));
+  }, []);
+
   const island = ISLANDS[index];
-  const counts = countByCategory(island.type);
+  const counts = countByCategory(places, island.type);
 
   function handleTouchStart(e: React.TouchEvent) {
     touchStartX.current = e.touches[0].clientX;
@@ -152,7 +161,7 @@ export default function ThemePage() {
               const GAP = 334;                   // centre-to-centre distance
               const x = offset * GAP;
               const isActive = offset === 0;
-              const c = countByCategory(isl.type);
+              const c = countByCategory(places, isl.type);
               return (
                 <div
                   key={isl.type}
