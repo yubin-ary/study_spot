@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { use, useState, useEffect } from "react";
 import mockPlaces, { Place } from "../../data/mockPlaces";
+import { getPlace } from "../../services/placeService";
 import { getReviews, type Review } from "../../services/reviewService";
 
 // Assets
@@ -90,22 +91,41 @@ function getSaved(): number[] {
 export default function PlaceDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const router = useRouter();
   const { id } = use(params);
-  const place: Place = mockPlaces.find((p) => String(p.id) === id) ?? mockPlaces[0];
-  const cat = CATEGORY_COLORS[place.category] ?? { bg: "#f0f0f0", text: "#666" };
+  const [place, setPlace] = useState<Place | null>(null);
   const [saved, setSaved] = useState(false);
   const [reviews, setReviews] = useState<Review[]>([]);
 
+  // 백엔드에서 이 장소 1건을 받아온다
   useEffect(() => {
+    getPlace(Number(id))
+      .then((data) => setPlace(data))
+      .catch((err) => console.error("장소 정보 로딩 실패:", err));
+  }, [id]);
+
+  useEffect(() => {
+    if (!place) return;
     setSaved(getSaved().includes(place.id));
     getReviews(String(place.id)).then(setReviews);
-  }, [place.id]);
+  }, [place]);
 
   function toggleSave() {
+    if (!place) return;
     const list = getSaved();
     const next = list.includes(place.id) ? list.filter((x) => x !== place.id) : [...list, place.id];
     localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
     setSaved(next.includes(place.id));
   }
+
+  // 데이터가 아직 안 왔으면 로딩 표시
+  if (!place) {
+    return (
+      <div style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "100vh", background: "#e5e5e5" }}>
+        <p style={{ color: "#999", fontSize: 14 }}>불러오는 중...</p>
+      </div>
+    );
+  }
+
+  const cat = CATEGORY_COLORS[place.category] ?? { bg: "#f0f0f0", text: "#666" };
 
   return (
     <div style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "100vh", background: "#e5e5e5" }}>

@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import mockPlaces, { Place } from "../data/mockPlaces";
+import { getPlaces } from "../services/placeService";
 
 const STORAGE_KEY = "spotyu_saved_places";
 function getSavedIds(): number[] {
@@ -156,12 +157,20 @@ export default function BookmarksPage() {
   const [filter, setFilter] = useState("전체");
   const [searchQuery, setSearchQuery] = useState("");
   const [savedIds, setSavedIds] = useState<number[]>([]);
+  const [allPlaces, setAllPlaces] = useState<Place[]>([]);
 
   useEffect(() => {
     setSavedIds(getSavedIds());
   }, []);
 
-  const saved = mockPlaces.filter((p) => savedIds.includes(p.id));
+  // 백엔드에서 전체 장소 목록을 받아온다
+  useEffect(() => {
+    getPlaces()
+      .then((data) => setAllPlaces(data))
+      .catch((err) => console.error("장소 목록 로딩 실패:", err));
+  }, []);
+
+  const saved = allPlaces.filter((p) => savedIds.includes(p.id));
 
   const islandTypes = Array.from(
     new Set(saved.map((p) => p.treasureType).filter(Boolean) as string[])

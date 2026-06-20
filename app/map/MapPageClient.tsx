@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import mockPlaces, { GeoPoint, Place } from "../data/mockPlaces";
+import { getPlaces } from "../services/placeService";
 
 // Assets
 const imgMap         = "/assets/b8dafec21f636b051f4261f80b461f8e271eb5ab.png";
@@ -286,10 +287,8 @@ function PlaceDetailCard({ place, onClose, onDetailClick }: { place: Place; onCl
 export default function MapPageClient() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [selectedPlace, setSelectedPlace] = useState<Place | null>(() => {
-    const id = searchParams.get("selected");
-    return id ? (mockPlaces.find((p) => String(p.id) === id) ?? null) : null;
-  });
+  const [allPlaces, setAllPlaces] = useState<Place[]>([]);
+  const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [selectedFilter, setSelectedFilter] = useState("전체 보물함");
   const [searchQuery, setSearchQuery] = useState("");
@@ -306,6 +305,20 @@ export default function MapPageClient() {
   });
 
   const dragRef = useRef({ active: false, startY: 0, startTop: SHEET_DEFAULT, lastTop: SHEET_DEFAULT });
+
+  // 백엔드에서 전체 장소 목록을 받아온다
+  useEffect(() => {
+    getPlaces()
+      .then((data) => {
+        setAllPlaces(data);
+        const id = searchParams.get("selected");
+        if (id) {
+          const found = data.find((p) => String(p.id) === id);
+          if (found) setSelectedPlace(found);
+        }
+      })
+      .catch((err) => console.error("장소 목록 로딩 실패:", err));
+  }, [searchParams]);
 
   useEffect(() => {
     function onMove(e: MouseEvent | TouchEvent) {
@@ -344,7 +357,7 @@ export default function MapPageClient() {
     e.preventDefault();
   }
 
-  const filteredPlaces = mockPlaces.filter((p) => {
+  const filteredPlaces = allPlaces.filter((p) => {
     if (recommendedIds) return recommendedIds.includes(p.id);
     const matchesFilter = selectedFilter === "전체 보물함" ? true : p.treasureType === selectedFilter;
     const q = searchQuery.trim();
