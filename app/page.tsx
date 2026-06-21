@@ -29,6 +29,7 @@ export default function SplashPage() {
           }}
         >
           {/* 하단 모래언덕 */}
+        
           <div style={{ position: "absolute", left: -64, top: 613, width: 460, height: 310 }}>
             <img alt="" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", display: "block" }} src={imgHill} />
           </div>

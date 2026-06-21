@@ -58,7 +58,7 @@ function IconPerson({ color }: { color: string }) {
 }
 
 const ISLANDS = [
-  { type: "현실도피섬", subtitle: "복잡하고 답답한 공간", secret: false, image: "/assets/island-escape.png" },
+  { type: "현실도피섬", subtitle: "붐비지 않고 편안한 공간", secret: false, image: "/assets/island-escape.png" },
   { type: "가성비섬", subtitle: "부담 없이 오래 머물 수 있는 공간", secret: false, image: "/assets/island-cheap.png" },
   { type: "밤샘섬", subtitle: "늦은 시간도 이용 가능한 공간", secret: false, image: "/assets/island-night.png" },
   { type: "비밀섬", subtitle: "아는 사람만 아는 공부명당", secret: true, image: "/assets/island-secret.png" },
