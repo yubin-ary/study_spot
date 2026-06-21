@@ -68,7 +68,8 @@ export default function VisitRecordPage() {
   const [selectedDate, setSelectedDate] = useState(today.getDate());
   const [showCalendar, setShowCalendar] = useState(false);
 
-  const [time] = useState("11:00");
+  const now = new Date();
+  const [time, setTime] = useState(`${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`);
   const [seat, setSeat] = useState("");
   const [noise, setNoise] = useState("");
   const [keywords, setKeywords] = useState<string[]>([]);
@@ -129,19 +130,31 @@ export default function VisitRecordPage() {
             </p>
 
             <p style={{ fontSize: 14, fontWeight: 600, color: "#333", marginTop: 24 }}>언제 방문하셨나요?</p>
-            <div style={{ display: "flex", gap: 10, marginTop: 10 }}>
+            <div style={{ display: "flex", gap: 8, marginTop: 10, flexWrap: "wrap" }}>
               <button
                 onClick={() => setShowCalendar((s) => !s)}
                 style={{
-                  flex: 1, background: showCalendar ? "#ffe9a8" : "#f4f4f4", border: "none", borderRadius: 10,
-                  padding: "12px 14px", fontSize: 13, color: "#333", textAlign: "left", cursor: "pointer", letterSpacing: "-0.3px",
+                  background: showCalendar ? "#ffc933" : "#f4f4f4",
+                  color: showCalendar ? "#3a2e10" : "#888",
+                  border: "none", borderRadius: 18,
+                  padding: "8px 18px", fontSize: 13,
+                  fontWeight: showCalendar ? 700 : 500,
+                  cursor: "pointer", letterSpacing: "-0.3px",
                 }}
               >
                 {dateLabel}
               </button>
-              <div style={{ background: "#f4f4f4", borderRadius: 10, padding: "12px 18px", fontSize: 13, color: "#333" }}>
-                {time}
-              </div>
+              <input
+                type="time"
+                value={time}
+                onChange={(e) => setTime(e.target.value)}
+                style={{
+                  background: "#f4f4f4", border: "none", borderRadius: 18,
+                  padding: "8px 18px", fontSize: 13, color: "#888",
+                  fontWeight: 500, letterSpacing: "-0.3px", cursor: "pointer",
+                  outline: "none",
+                }}
+              />
             </div>
 
             {showCalendar && (
