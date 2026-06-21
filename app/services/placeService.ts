@@ -80,6 +80,8 @@ function toPlace(api: ApiPlace): Place {
     visitTags: api.mood ? [api.mood] : [],
     treasureType: resolveTreasureType(api.theme, api.hiddenSpot),
     pinType: PIN_TYPES[api.id % PIN_TYPES.length],
+    hasOutlet: api.hasOutlet,
+    description: api.description,
   };
 }
 
@@ -96,7 +98,22 @@ export async function getPlace(placeId: number): Promise<Place> {
   const res = await fetch(`${BASE_URL}/SPOTYU/places/${placeId}`);
   if (!res.ok) throw new Error(`장소 정보를 불러오지 못했어요 (${res.status})`);
   const json = await res.json();
-  // { success, data: {...} } 형태이거나 그냥 객체인 경우 모두 대응
   const item: ApiPlace = json.data ?? json;
   return toPlace(item);
+}
+
+export async function getPlacesByTheme(theme: string): Promise<Place[]> {
+  const res = await fetch(`${BASE_URL}/SPOTYU/places/theme/${encodeURIComponent(theme)}`);
+  if (!res.ok) throw new Error(`테마 장소를 불러오지 못했어요 (${res.status})`);
+  const json = await res.json();
+  const list: ApiPlace[] = Array.isArray(json) ? json : (json.data ?? []);
+  return list.map(toPlace);
+}
+
+export async function searchPlaces(keyword: string): Promise<Place[]> {
+  const res = await fetch(`${BASE_URL}/SPOTYU/places/search?keyword=${encodeURIComponent(keyword)}`);
+  if (!res.ok) throw new Error(`검색에 실패했어요 (${res.status})`);
+  const json = await res.json();
+  const list: ApiPlace[] = Array.isArray(json) ? json : (json.data ?? []);
+  return list.map(toPlace);
 }

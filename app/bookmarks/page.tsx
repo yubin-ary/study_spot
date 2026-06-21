@@ -2,16 +2,9 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import mockPlaces, { Place } from "../data/mockPlaces";
-import { getPlaces } from "../services/placeService";
+import { Place } from "../data/mockPlaces";
+import { getBookmarks, addBookmark, removeBookmark, BookmarkEntry } from "../services/bookmarkService";
 
-const STORAGE_KEY = "spotyu_saved_places";
-function getSavedIds(): number[] {
-  if (typeof window === "undefined") return [];
-  try { return JSON.parse(localStorage.getItem(STORAGE_KEY) ?? "[]"); } catch { return []; }
-}
-
-const imgStatusIcons = "/assets/b655a4944c744b18f533b9c4e87522b5f1e0f728.svg";
 const imgChevronRight = "/assets/d87c43c80e992a0641ded1887d61e2df8dcd2d62.svg";
 const imgNavBg = "/assets/4870fdf34b871dd7cc5520f60aad475b01c76985.svg";
 const imgDivider = "/assets/a90fc2e1380e556a9f90746c725a57a7a370ee91.svg";
@@ -117,9 +110,9 @@ function BookmarkCard({ place, onClick }: { place: Place; onClick: () => void })
       </div>
 
       {/* Hours */}
-      <div style={{ position: "absolute", left: 89, top: 63, right: 16, display: "flex", alignItems: "center", gap: 6 }}>
-        <span style={{ fontSize: 12, color: "#767676" }}>🕐</span>
-        <span style={{ fontSize: 12, color: "#767676", letterSpacing: "-0.3px", lineHeight: 1.3, whiteSpace: "nowrap" }}>
+      <div style={{ position: "absolute", left: 89, top: 63, right: 16, display: "flex", alignItems: "flex-start", gap: 6 }}>
+        <span style={{ fontSize: 12, color: "#767676", flexShrink: 0 }}>🕐</span>
+        <span style={{ fontSize: 12, color: "#767676", letterSpacing: "-0.3px", lineHeight: 1.3, overflow: "hidden", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical" }}>
           평일 {place.weekdayHours} / 주말 {place.weekendHours}
         </span>
       </div>
@@ -156,21 +149,17 @@ export default function BookmarksPage() {
   const router = useRouter();
   const [filter, setFilter] = useState("전체");
   const [searchQuery, setSearchQuery] = useState("");
-  const [savedIds, setSavedIds] = useState<number[]>([]);
-  const [allPlaces, setAllPlaces] = useState<Place[]>([]);
+  const [savedPlaces, setSavedPlaces] = useState<Place[]>([]);
+  const [bookmarkEntries, setBookmarkEntries] = useState<BookmarkEntry[]>([]);
 
   useEffect(() => {
-    setSavedIds(getSavedIds());
+    getBookmarks().then(({ places, entries }) => {
+      setSavedPlaces(places);
+      setBookmarkEntries(entries);
+    });
   }, []);
 
-  // 백엔드에서 전체 장소 목록을 받아온다
-  useEffect(() => {
-    getPlaces()
-      .then((data) => setAllPlaces(data))
-      .catch((err) => console.error("장소 목록 로딩 실패:", err));
-  }, []);
-
-  const saved = allPlaces.filter((p) => savedIds.includes(p.id));
+  const saved = savedPlaces;
 
   const islandTypes = Array.from(
     new Set(saved.map((p) => p.treasureType).filter(Boolean) as string[])
@@ -192,15 +181,6 @@ export default function BookmarksPage() {
           className="border-2 border-[#111] border-solid overflow-clip relative rounded-[25px]"
           style={{ width: "100%", height: "100%", background: "#fff" }}
         >
-          <div className="absolute overflow-clip" style={{ top: 0, left: "50%", transform: "translateX(-50%)", width: 388, height: 43 }}>
-            <div className="absolute" style={{ right: 24, top: 16.33, width: 64.341, height: 11.337 }}>
-              <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgStatusIcons} />
-            </div>
-            <p className="absolute text-center" style={{ left: "50%", transform: "translateX(-50%)", top: 12, fontSize: 15, fontWeight: 600, lineHeight: "20px", letterSpacing: "-0.5px", color: "#111" }}>
-              9:41
-            </p>
-          </div>
-
           <div className="absolute" style={{ top: 43, left: 0, width: 390, height: 46, zIndex: 20, display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 24px", boxSizing: "border-box" }}>
             <p style={{ fontSize: 23, fontWeight: 900, color: "#ffbf00", letterSpacing: "-0.575px", lineHeight: 1.5, whiteSpace: "nowrap" }}>
               SPOTYU

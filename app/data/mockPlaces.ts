@@ -23,6 +23,8 @@ export interface Place {
   visitTags: string[];
   treasureType: TreasureType;
   pinType: "yellow" | "purple" | "cyan" | "lavender" | "blue";
+  hasOutlet?: boolean;
+  description?: string;
 }
 
 // TODO: API 연동 시 교체

@@ -2,30 +2,33 @@
 
 import { use, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import mockPlaces, { Place } from "../../data/mockPlaces";
-import { getPlaces } from "../../services/placeService";
+import { Place } from "../../data/mockPlaces";
+import { getPlacesByTheme } from "../../services/placeService";
+import { getBookmarks, addBookmark, removeBookmark, BookmarkEntry } from "../../services/bookmarkService";
 
-const imgStatusIcons = "/assets/b655a4944c744b18f533b9c4e87522b5f1e0f728.svg";
 const imgBackArrow   = "/assets/45d8a0f6495680e676880af5da9c876d1c9d332b.svg";
 const imgChevronRight = "/assets/d87c43c80e992a0641ded1887d61e2df8dcd2d62.svg";
 
-const STORAGE_KEY = "spotyu_saved_places";
-function getSavedIds(): number[] {
-  if (typeof window === "undefined") return [];
-  try { return JSON.parse(localStorage.getItem(STORAGE_KEY) ?? "[]"); } catch { return []; }
-}
-function toggleSavedId(id: number): number[] {
-  const list = getSavedIds();
-  const next = list.includes(id) ? list.filter((x) => x !== id) : [...list, id];
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
-  return next;
-}
-
-function SaveButton({ placeId, savedIds, onToggle }: { placeId: number; savedIds: number[]; onToggle: (next: number[]) => void }) {
-  const isSaved = savedIds.includes(placeId);
+function SaveButton({ placeId, entries, onToggle }: {
+  placeId: number;
+  entries: BookmarkEntry[];
+  onToggle: (entries: BookmarkEntry[]) => void;
+}) {
+  const entry = entries.find((e) => e.placeId === placeId);
+  const isSaved = !!entry;
+  const handleClick = async (ev: React.MouseEvent) => {
+    ev.stopPropagation();
+    if (isSaved && entry) {
+      await removeBookmark(entry.bookmarkId);
+      onToggle(entries.filter((e) => e.placeId !== placeId));
+    } else {
+      const newId = await addBookmark(placeId);
+      if (newId !== null) onToggle([...entries, { bookmarkId: newId, placeId }]);
+    }
+  };
   return (
     <button
-      onClick={(e) => { e.stopPropagation(); onToggle(toggleSavedId(placeId)); }}
+      onClick={handleClick}
       style={{
         position: "absolute", top: -12, right: -12, width: 24, height: 24,
         background: isSaved ? "#ffbf00" : "#aeaeae",
@@ -47,10 +50,10 @@ function SaveButton({ placeId, savedIds, onToggle }: { placeId: number; savedIds
   );
 }
 
-function PlaceCard({ place, savedIds, onToggleSave, onClick }: {
+function PlaceCard({ place, entries, onToggleSave, onClick }: {
   place: Place;
-  savedIds: number[];
-  onToggleSave: (next: number[]) => void;
+  entries: BookmarkEntry[];
+  onToggleSave: (next: BookmarkEntry[]) => void;
   onClick: () => void;
 }) {
   return (
@@ -63,7 +66,7 @@ function PlaceCard({ place, savedIds, onToggleSave, onClick }: {
       }}
     >
       {/* Save button */}
-      <SaveButton placeId={place.id} savedIds={savedIds} onToggle={onToggleSave} />
+      <SaveButton placeId={place.id} entries={entries} onToggle={onToggleSave} />
 
       {/* 더보기 */}
       <div style={{ position: "absolute", top: 16, right: 8, display: "flex", alignItems: "center", gap: 3 }}>
@@ -86,9 +89,9 @@ function PlaceCard({ place, savedIds, onToggleSave, onClick }: {
       </div>
 
       {/* Hours */}
-      <div style={{ position: "absolute", left: 89, top: 50, right: 16, display: "flex", alignItems: "center", gap: 6 }}>
-        <span style={{ fontSize: 12, color: "#767676" }}>🕐</span>
-        <span style={{ fontSize: 12, color: "#767676", letterSpacing: "-0.3px", lineHeight: 1.3, whiteSpace: "nowrap" }}>
+      <div style={{ position: "absolute", left: 89, top: 50, right: 16, display: "flex", alignItems: "flex-start", gap: 6 }}>
+        <span style={{ fontSize: 12, color: "#767676", flexShrink: 0 }}>🕐</span>
+        <span style={{ fontSize: 12, color: "#767676", letterSpacing: "-0.3px", lineHeight: 1.3, overflow: "hidden", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical" }}>
           평일 {place.weekdayHours} / 주말 {place.weekendHours}
         </span>
       </div>
@@ -119,16 +122,16 @@ export default function IslandPage({ params }: { params: Promise<{ type: string 
   const { type } = use(params);
   const islandName = decodeURIComponent(type);
   const [places, setPlaces] = useState<Place[]>([]);
-  const [savedIds, setSavedIds] = useState<number[]>([]);
+  const [bookmarkEntries, setBookmarkEntries] = useState<BookmarkEntry[]>([]);
 
   useEffect(() => {
-    getPlaces()
-      .then((all) => setPlaces(all.filter((p) => p.treasureType === islandName)))
-      .catch((err) => console.error("장소 목록 로딩 실패:", err));
+    getPlacesByTheme(islandName)
+      .then(setPlaces)
+      .catch((err) => console.error("테마 장소 로딩 실패:", err));
   }, [islandName]);
 
   useEffect(() => {
-    setSavedIds(getSavedIds());
+    getBookmarks().then(({ entries }) => setBookmarkEntries(entries));
   }, []);
 
   return (
@@ -140,13 +143,6 @@ export default function IslandPage({ params }: { params: Promise<{ type: string 
           position: "relative", background: "#f8f8f8",
         }}>
 
-          {/* Status bar */}
-          <div style={{ position: "absolute", top: 0, left: "50%", transform: "translateX(-50%)", width: 388, height: 43, overflow: "hidden" }}>
-            <div style={{ position: "absolute", right: 24, top: 16, width: 64, height: 11 }}>
-              <img alt="" style={{ width: "100%", height: "100%", display: "block" }} src={imgStatusIcons} />
-            </div>
-            <p style={{ position: "absolute", left: "50%", transform: "translateX(-50%)", top: 12, fontSize: 15, fontWeight: 600, color: "#111", letterSpacing: "-0.5px" }}>9:41</p>
-          </div>
 
           {/* Header */}
           <div style={{ position: "absolute", top: 43, left: 0, right: 0, height: 56, display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -174,8 +170,8 @@ export default function IslandPage({ params }: { params: Promise<{ type: string 
                 <PlaceCard
                   key={place.id}
                   place={place}
-                  savedIds={savedIds}
-                  onToggleSave={setSavedIds}
+                  entries={bookmarkEntries}
+                  onToggleSave={setBookmarkEntries}
                   onClick={() => router.push(`/place/${place.id}`)}
                 />
               ))

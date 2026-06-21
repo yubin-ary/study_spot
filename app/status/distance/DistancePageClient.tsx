@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-const imgStatusIcons = "/assets/b655a4944c744b18f533b9c4e87522b5f1e0f728.svg";
 const imgBackArrow = "/assets/45d8a0f6495680e676880af5da9c876d1c9d332b.svg";
 const imgSprite = "/assets/34778ad51d321a322aaa60ad49e33b380b3626a4.png";
 
@@ -22,53 +21,10 @@ const options = [
   },
 ];
 
-function RecommendationLoadingScreen() {
-  return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100">
-      <div style={{ width: 390, height: 844, position: "relative" }}>
-        <div
-          className="bg-[#f8f8f8] border-2 border-[#111] border-solid overflow-clip relative rounded-[25px]"
-          style={{ width: "100%", height: "100%" }}
-        >
-          <div className="absolute overflow-clip" style={{ top: 0, left: "50%", transform: "translateX(-50%)", width: 388, height: 43 }}>
-            <div className="absolute" style={{ right: 24, top: 16.33, width: 64.341, height: 11.337 }}>
-              <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgStatusIcons} />
-            </div>
-            <p className="absolute text-center" style={{ left: "50%", transform: "translateX(-50%)", top: 12, fontSize: 15, fontWeight: 600, lineHeight: "20px", letterSpacing: "-0.5px", color: "#111" }}>
-              9:41
-            </p>
-          </div>
-
-          <div style={{ position: "absolute", left: 0, right: 0, top: 233, display: "flex", flexDirection: "column", alignItems: "center" }}>
-            <div className="spotyu-loading-orbit" aria-label="추천 장소를 찾는 중">
-              <div className="spotyu-loading-dot" />
-            </div>
-            <p style={{ marginTop: 58, fontSize: 24, fontWeight: 700, color: "#111", letterSpacing: "-0.6px", lineHeight: 1.45 }}>
-              추천 장소를 찾고 있어요
-            </p>
-            <p style={{ marginTop: 10, fontSize: 15, fontWeight: 500, color: "#767676", letterSpacing: "-0.38px", lineHeight: 1.5, textAlign: "center" }}>
-              선택한 조건에 맞는 공부 장소를
-              <br />
-              분석하는 중이에요
-            </p>
-          </div>
-
-          <div className="absolute overflow-clip" style={{ bottom: -2, left: "50%", transform: "translateX(-50%)", width: 390, height: 34 }}>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
 export default function DistancePageClient() {
   const [selected, setSelected] = useState<number | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
   const router = useRouter();
-
-  if (loading) {
-    return <RecommendationLoadingScreen />;
-  }
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
@@ -78,15 +34,6 @@ export default function DistancePageClient() {
           style={{ width: "100%", height: "100%" }}
         >
           {/* Status bar */}
-          <div className="absolute overflow-clip" style={{ top: 0, left: "50%", transform: "translateX(-50%)", width: 388, height: 43 }}>
-            <div className="absolute" style={{ right: 24, top: 16.33, width: 64.341, height: 11.337 }}>
-              <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgStatusIcons} />
-            </div>
-            <p className="absolute text-center" style={{ left: "50%", transform: "translateX(-50%)", top: 12, fontSize: 15, fontWeight: 600, lineHeight: "20px", letterSpacing: "-0.5px", color: "#111" }}>
-              9:41
-            </p>
-          </div>
-
           {/* Header */}
           <div className="absolute" style={{ top: 45, left: 0, right: 0, height: 56 }}>
             <button onClick={() => router.back()} className="absolute" style={{ left: 32, top: 7, width: 28, height: 28, background: "none", border: "none", padding: 0, cursor: "pointer" }}>
@@ -147,8 +94,8 @@ export default function DistancePageClient() {
           {/* Search button */}
           <button
             onClick={async () => {
-              if (selected === null || loading) return;
-              setLoading(true);
+              if (selected === null || submitting) return;
+              setSubmitting(true);
               const distanceLabel = options[selected].label;
               sessionStorage.setItem("spotyu_distance", distanceLabel);
               const purpose = sessionStorage.getItem("spotyu_purpose") ?? "";
@@ -162,19 +109,20 @@ export default function DistancePageClient() {
                 const data = await res.json();
                 sessionStorage.setItem("spotyu_recommended_ids", JSON.stringify(data.ids ?? []));
               } catch {
-                sessionStorage.removeItem("spotyu_recommended_ids");
+                // API 실패 시 빈 배열 저장 → 지도에서 전체 장소 표시하되 배너는 유지
+                sessionStorage.setItem("spotyu_recommended_ids", JSON.stringify([]));
               }
-              router.push("/map");
+              router.push("/status/loading");
             }}
             className="absolute flex items-center justify-center rounded-[10px]"
             style={{
               left: "50%", transform: "translateX(-50%)", top: 732, width: 339, height: 60,
-              backgroundColor: selected !== null && !loading ? "#ffbf00" : "#e0e0e0",
-              border: "none", cursor: selected !== null && !loading ? "pointer" : "not-allowed",
+              backgroundColor: selected !== null && !submitting ? "#ffbf00" : "#e0e0e0",
+              border: "none", cursor: selected !== null && !submitting ? "pointer" : "not-allowed",
             }}
           >
             <span style={{ fontSize: 16, fontWeight: 600, color: "#111", letterSpacing: "-0.4px", lineHeight: 1.5 }}>
-              {loading ? "추천 받는 중..." : "탐색하기"}
+              {submitting ? "추천 받는 중..." : "탐색하기"}
             </span>
           </button>
 

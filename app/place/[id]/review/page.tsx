@@ -3,11 +3,11 @@
 import { use, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getReviews, saveReview } from "../../../services/reviewService";
+import { saveVisitHistory } from "../../../services/visitHistoryService";
 
-const imgStatusIcons = "/assets/b655a4944c744b18f533b9c4e87522b5f1e0f728.svg";
 const imgChevronLeft  = "/assets/c308fc232ec5e74ad2b99de339b0301252bc8d90.svg";
 
-const KEYWORDS = ["콘셉트 많음", "집중 잘됨", "가성비", "팀플가능", "분위기 좋음"];
+const KEYWORDS = ["콘센트 많음", "집중 잘됨", "가성비", "팀플가능", "분위기 좋음"];
 const SEATS    = ["넉넉", "적당", "혼잡"];
 const NOISES   = ["시끌", "보통", "조용"];
 const WEEKDAYS = ["일", "월", "화", "수", "목", "금", "토"];
@@ -120,6 +120,8 @@ export default function ReviewPage({ params }: { params: Promise<{ id: string }>
     setSubmitting(true);
     try {
       await saveReview(id, { visitDate, visitTime, seats, noise, keywords });
+      const isoDate = new Date().toISOString();
+      await saveVisitHistory(id, seats, noise, isoDate);
       // router.back()이 히스토리 없을 때 실패할 수 있으므로 명시적 경로 이동
       if (window.history.length > 1) {
         router.back();
@@ -240,13 +242,6 @@ export default function ReviewPage({ params }: { params: Promise<{ id: string }>
           </div>
 
           {/* Fixed: Status bar */}
-          <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 43, zIndex: 30, background: "#fff" }}>
-            <div style={{ position: "absolute", right: 24, top: 16, width: 64, height: 11 }}>
-              <img src={imgStatusIcons} alt="" style={{ width: "100%", height: "100%" }} />
-            </div>
-            <p style={{ position: "absolute", left: "50%", transform: "translateX(-50%)", top: 12, fontSize: 15, fontWeight: 600, color: "#111", letterSpacing: "-0.5px" }}>9:41</p>
-          </div>
-
           {/* Fixed: Header */}
           <div style={{ position: "absolute", top: 43, left: 0, right: 0, height: 56, zIndex: 30, background: "#fff", display: "flex", alignItems: "center", justifyContent: "center" }}>
             <button onClick={() => router.back()}

@@ -5,9 +5,9 @@ import { use, useState, useEffect } from "react";
 import mockPlaces, { Place } from "../../data/mockPlaces";
 import { getPlace } from "../../services/placeService";
 import { getReviews, type Review } from "../../services/reviewService";
+import { getVisitHistoriesByPlace, type VisitHistory } from "../../services/visitHistoryService";
 
 // Assets
-const imgStatusIcons = "/assets/b655a4944c744b18f533b9c4e87522b5f1e0f728.svg";
 const imgNavBg       = "/assets/4870fdf34b871dd7cc5520f60aad475b01c76985.svg";
 const imgChevronLeft = "/assets/c308fc232ec5e74ad2b99de339b0301252bc8d90.svg";
 const imgMoreChevron = "/assets/a134d3c5a24645f38aaba0f39e0d113d5cd6a3b3.svg";
@@ -73,13 +73,6 @@ const MOCK_REVIEWS = [
   { name: "솜사탕", date: "2026.04.28", tags: ["분위기 좋음", "여유좌석 적당", "소음 보통"] },
 ];
 
-const SPOT_INFO = [
-  { label: "콘센트", value: "있음", icon: "⚡" },
-  { label: "가격대", value: "4,500~6,000", icon: "💰" },
-  { label: "와이파이", value: "있음", icon: "📶" },
-];
-
-const TOP_TAGS = [["분위기 좋음", "화장실 깨끗함", "소음 보통"], ["가성비", "여유좌석 보통"]];
 
 const STORAGE_KEY = "spotyu_saved_places";
 
@@ -94,6 +87,7 @@ export default function PlaceDetailPage({ params }: { params: Promise<{ id: stri
   const [place, setPlace] = useState<Place | null>(null);
   const [saved, setSaved] = useState(false);
   const [reviews, setReviews] = useState<Review[]>([]);
+  const [visitHistories, setVisitHistories] = useState<VisitHistory[]>([]);
 
   // 백엔드에서 이 장소 1건을 받아온다
   useEffect(() => {
@@ -106,6 +100,7 @@ export default function PlaceDetailPage({ params }: { params: Promise<{ id: stri
     if (!place) return;
     setSaved(getSaved().includes(place.id));
     getReviews(String(place.id)).then(setReviews);
+    getVisitHistoriesByPlace(String(place.id)).then(setVisitHistories);
   }, [place]);
 
   function toggleSave() {
@@ -167,6 +162,15 @@ export default function PlaceDetailPage({ params }: { params: Promise<{ id: stri
                 </span>
               </div>
 
+              {/* Description */}
+              {place.description && (
+                <div style={{ margin: "12px 35px 0" }}>
+                  <p style={{ fontSize: 13, color: "#525252", letterSpacing: "-0.3px", lineHeight: 1.6, margin: 0 }}>
+                    {place.description}
+                  </p>
+                </div>
+              )}
+
               {/* Info box */}
               <div style={{ margin: "16px 35px 0", background: "#fff8e6", borderRadius: 12, padding: "12px 0" }}>
                 <div style={{ display: "flex", alignItems: "stretch" }}>
@@ -195,7 +199,9 @@ export default function PlaceDetailPage({ params }: { params: Promise<{ id: stri
               <div style={{ margin: "24px 28px 0" }}>
                 <p style={{ fontSize: 16, fontWeight: 500, color: "#111", letterSpacing: "-0.4px", lineHeight: 1.5 }}>스팟정보</p>
                 <div style={{ height: 1, background: "#e8e8e8", margin: "8px 0" }} />
-                {SPOT_INFO.map((row, i) => (
+                {[
+                  { label: "콘센트", value: place.hasOutlet === true ? "있음" : place.hasOutlet === false ? "없음" : "정보 없음", icon: "⚡" },
+                ].map((row, i, arr) => (
                   <div key={i}>
                     <div style={{ display: "flex", alignItems: "center", padding: "10px 0", gap: 16 }}>
                       <div style={{ width: 60, display: "flex", alignItems: "center", gap: 4, flexShrink: 0 }}>
@@ -204,7 +210,7 @@ export default function PlaceDetailPage({ params }: { params: Promise<{ id: stri
                       </div>
                       <span style={{ fontSize: 14, fontWeight: 500, color: "#111", letterSpacing: "-0.35px" }}>{row.value}</span>
                     </div>
-                    {i < SPOT_INFO.length - 1 && <div style={{ height: 1, background: "#e8e8e8" }} />}
+                    {i < arr.length - 1 && <div style={{ height: 1, background: "#e8e8e8" }} />}
                   </div>
                 ))}
               </div>
@@ -214,27 +220,66 @@ export default function PlaceDetailPage({ params }: { params: Promise<{ id: stri
                 <p style={{ fontSize: 16, fontWeight: 500, color: "#111", letterSpacing: "-0.4px", lineHeight: 1.5, marginBottom: 12 }}>
                   👑 방문자태그 TOP5
                 </p>
-                {TOP_TAGS.map((row, ri) => (
-                  <div key={ri} style={{ display: "flex", gap: 4, flexWrap: "wrap", marginBottom: 4 }}>
-                    {row.map((tag) => (
-                      <span key={tag} style={{ background: "#ffe38e", borderRadius: 20, padding: "6px 20px", fontSize: 13, fontWeight: 500, color: "#525252", letterSpacing: "-0.26px", whiteSpace: "nowrap" }}>
+                {(() => {
+                  const reviewTags = reviews.flatMap((r) => [
+                    ...(r.seats ? [`여유좌석 ${r.seats}`] : []),
+                    ...(r.noise ? [`소음 ${r.noise}`] : []),
+                    ...r.keywords,
+                  ]);
+                  const allTags = [...new Set([...place.visitTags, ...reviewTags])].slice(0, 5);
+                  if (allTags.length === 0) return <p style={{ fontSize: 13, color: "#aeaeae" }}>아직 태그가 없어요.</p>;
+                  return (
+                    <div style={{ display: "flex", gap: 4, flexWrap: "wrap" }}>
+                      {allTags.map((tag) => (
+                        <span key={tag} style={{ background: "#ffe38e", borderRadius: 20, padding: "6px 20px", fontSize: 13, fontWeight: 500, color: "#525252", letterSpacing: "-0.26px", whiteSpace: "nowrap" }}>
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  );
+                })()}
+              </div>
+
+              {/* 최근 방문자 기록 */}
+              {visitHistories.length > 0 && (
+                <div style={{ margin: "24px 35px 0", background: "#f8f8f8", borderRadius: 10, padding: "14px 16px" }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
+                    <p style={{ fontSize: 13, fontWeight: 600, color: "#111", letterSpacing: "-0.33px", margin: 0 }}>최근 방문자 기록</p>
+                    <span style={{ fontSize: 11, color: "#aeaeae" }}>
+                      {(() => {
+                        const latest = visitHistories[visitHistories.length - 1];
+                        const diff = Date.now() - new Date(latest.visitedAt).getTime();
+                        const h = Math.floor(diff / 3600000);
+                        return h < 1 ? "방금 전" : h < 24 ? `${h}시간 전` : `${Math.floor(h / 24)}일 전`;
+                      })()}
+                    </span>
+                  </div>
+                  <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+                    {visitHistories.slice(-1).map((h) => [
+                      h.seatStatus && `좌석 ${h.seatStatus}`,
+                      h.noiseStatus && `소음 ${h.noiseStatus}`,
+                    ].filter(Boolean)).flat().map((tag) => (
+                      <span key={tag as string} style={{ background: "#ffe38e", borderRadius: 20, padding: "6px 16px", fontSize: 13, fontWeight: 500, color: "#525252", letterSpacing: "-0.26px" }}>
                         {tag}
                       </span>
                     ))}
                   </div>
-                ))}
-              </div>
+                </div>
+              )}
 
               {/* 최근 방문 후기 */}
               <div style={{ margin: "28px 0 0" }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "0 35px", marginBottom: 12 }}>
                   <p style={{ fontSize: 14, fontWeight: 500, color: "#111", letterSpacing: "-0.35px", lineHeight: 1.5 }}>최근 방문 후기</p>
-                  <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+                  <button
+                    onClick={() => router.push(`/place/${id}/reviews`)}
+                    style={{ display: "flex", alignItems: "center", gap: 4, background: "none", border: "none", cursor: "pointer", padding: 0 }}
+                  >
                     <span style={{ fontSize: 12, fontWeight: 500, color: "#767676", letterSpacing: "-0.3px" }}>전체보기</span>
                     <div style={{ transform: "rotate(180deg)", width: 5, height: 10 }}>
                       <img src={imgMoreChevron} alt="" style={{ width: "100%", height: "100%" }} />
                     </div>
-                  </div>
+                  </button>
                 </div>
 
                 <div style={{ margin: "0 35px", background: "#f8f8f8", borderRadius: 10, padding: "16px" }}>
@@ -281,13 +326,6 @@ export default function PlaceDetailPage({ params }: { params: Promise<{ id: stri
           </div>
 
           {/* Fixed: Status bar */}
-          <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 43, zIndex: 30, background: "#fff", borderRadius: "25px 25px 0 0" }}>
-            <div style={{ position: "absolute", right: 24, top: 16, width: 64, height: 11 }}>
-              <img src={imgStatusIcons} alt="" style={{ width: "100%", height: "100%" }} />
-            </div>
-            <p style={{ position: "absolute", left: "50%", transform: "translateX(-50%)", top: 12, fontSize: 15, fontWeight: 600, color: "#111", letterSpacing: "-0.5px" }}>9:41</p>
-          </div>
-
           {/* Fixed: Header */}
           <div style={{ position: "absolute", top: 43, left: 0, right: 0, height: 56, zIndex: 30, background: "#fff", display: "flex", alignItems: "center", justifyContent: "center" }}>
             <button

@@ -2,13 +2,12 @@
 
 import { useState, useRef, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import mockPlaces, { GeoPoint, Place } from "../data/mockPlaces";
-import { getPlaces } from "../services/placeService";
+import { GeoPoint, Place } from "../data/mockPlaces";
+import { getPlaces, searchPlaces } from "../services/placeService";
 import KakaoMapView from "./KakaoMapView";
 
 // Assets
 const imgMap         = "/assets/b8dafec21f636b051f4261f80b461f8e271eb5ab.png";
-const imgStatusIcons = "/assets/b655a4944c744b18f533b9c4e87522b5f1e0f728.svg";
 const imgNavBg       = "/assets/4870fdf34b871dd7cc5520f60aad475b01c76985.svg";
 const imgChevron     = "/assets/76f833f8b3cd3892dfd461fc036e1f9c44342db7.svg";
 const imgMoreChevron = "/assets/a134d3c5a24645f38aaba0f39e0d113d5cd6a3b3.svg";
@@ -44,7 +43,7 @@ const STATIC_MAP_BOUNDS = {
   east: 127.0510,
 };
 
-const MOCK_USER_LOCATION: GeoPoint = { lat: 37.6043, lng: 127.0440 };
+const FALLBACK_LOCATION: GeoPoint = { lat: 37.6043, lng: 127.0440 };
 
 function projectGeoPointToStaticMap(point: GeoPoint) {
   const x = ((point.lng - STATIC_MAP_BOUNDS.west) / (STATIC_MAP_BOUNDS.east - STATIC_MAP_BOUNDS.west)) * 100;
@@ -172,47 +171,50 @@ function PlaceCard({ place, onClick, onDetailClick }: { place: Place; onClick: (
       onClick={onClick}
       style={{
         width: 354,
-        height: 83,
+        minHeight: 83,
         background: "#fafafa",
         borderRadius: 10,
         flexShrink: 0,
         cursor: "pointer",
-        padding: "0 17px",
+        padding: "12px 17px",
         boxSizing: "border-box",
         display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        gap: 4,
+        flexDirection: "row",
+        alignItems: "center",
+        gap: 8,
+        minWidth: 0,
       }}
     >
-      <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between" }}>
-        <div style={{ display: "flex", alignItems: "flex-end", gap: 8 }}>
-          <span style={{ fontSize: 20, fontWeight: 600, color: "#111", letterSpacing: "-0.5px", lineHeight: 1.5 }}>
+      {/* Left: name+badge, hours */}
+      <div style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", gap: 4 }}>
+        <div style={{ display: "flex", alignItems: "flex-end", gap: 8, minWidth: 0, overflow: "hidden" }}>
+          <span style={{ fontSize: 20, fontWeight: 600, color: "#111", letterSpacing: "-0.5px", lineHeight: 1.5, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", minWidth: 0 }}>
             {place.name}
           </span>
           <span style={{
             fontSize: 12, fontWeight: 500, color: cat.text, background: cat.bg,
             borderRadius: 6, padding: "2px 12px", letterSpacing: "-0.3px", lineHeight: 1.3,
-            marginBottom: 3,
+            marginBottom: 3, whiteSpace: "nowrap", flexShrink: 0,
           }}>
             {place.category}
           </span>
         </div>
-        <div
-          onClick={(e) => { e.stopPropagation(); onDetailClick(); }}
-          style={{ display: "flex", alignItems: "center", gap: 8, cursor: "pointer" }}
-        >
-          <span style={{ fontSize: 12, color: "#767676", fontWeight: 500, lineHeight: "normal" }}>더보기</span>
-          <div style={{ transform: "rotate(180deg)", width: 5, height: 10 }}>
-            <img src={imgMoreChevron} alt="" style={{ width: "100%", height: "100%" }} />
-          </div>
+        <div style={{ display: "flex", alignItems: "flex-start", gap: 6, minWidth: 0 }}>
+          <span style={{ fontSize: 12, color: "#767676", letterSpacing: "-0.3px", flexShrink: 0, lineHeight: 1.3 }}>🕐</span>
+          <span style={{ fontSize: 12, color: "#767676", letterSpacing: "-0.3px", lineHeight: 1.3, overflow: "hidden", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical" }}>
+            평일 {place.weekdayHours} / 주말 {place.weekendHours}
+          </span>
         </div>
       </div>
-      <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-        <span style={{ fontSize: 12, color: "#767676", letterSpacing: "-0.3px" }}>🕐</span>
-        <span style={{ fontSize: 12, color: "#767676", letterSpacing: "-0.3px", lineHeight: 1.3 }}>
-          평일 {place.weekdayHours} / 주말 {place.weekendHours}
-        </span>
+      {/* Right: 더보기 vertically centered */}
+      <div
+        onClick={(e) => { e.stopPropagation(); onDetailClick(); }}
+        style={{ display: "flex", alignItems: "center", gap: 4, cursor: "pointer", flexShrink: 0 }}
+      >
+        <span style={{ fontSize: 12, color: "#767676", fontWeight: 500, whiteSpace: "nowrap" }}>더보기</span>
+        <div style={{ transform: "rotate(180deg)", width: 5, height: 10 }}>
+          <img src={imgMoreChevron} alt="" style={{ width: "100%", height: "100%" }} />
+        </div>
       </div>
     </div>
   );
@@ -233,23 +235,23 @@ function PlaceDetailCard({ place, onClose, onDetailClick }: { place: Place; onCl
         </button>
       </div>
       <div style={{ display: "flex", gap: 12 }}>
-        <div style={{ width: 88, height: 110, borderRadius: 10, overflow: "hidden", flexShrink: 0 }}>
-          <img src={place.imageUrl} alt={place.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+        <div style={{ width: 88, borderRadius: 10, overflow: "hidden", flexShrink: 0, alignSelf: "stretch" }}>
+          <img src={place.imageUrl} alt={place.name} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
         </div>
-        <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 4 }}>
-          <div style={{ display: "flex", alignItems: "flex-end", gap: 6 }}>
-            <span style={{ fontSize: 20, fontWeight: 600, color: "#111", letterSpacing: "-0.5px" }}>{place.name}</span>
-            <span style={{ fontSize: 12, fontWeight: 500, color: cat.text, background: cat.bg, borderRadius: 6, padding: "2px 10px", marginBottom: 2 }}>
+        <div style={{ flex: 1, minWidth: 0, overflow: "hidden", display: "flex", flexDirection: "column", gap: 4 }}>
+          <div style={{ display: "flex", alignItems: "flex-end", gap: 6, minWidth: 0, overflow: "hidden" }}>
+            <span style={{ fontSize: 20, fontWeight: 600, color: "#111", letterSpacing: "-0.5px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", minWidth: 0 }}>{place.name}</span>
+            <span style={{ fontSize: 12, fontWeight: 500, color: cat.text, background: cat.bg, borderRadius: 6, padding: "2px 10px", marginBottom: 2, whiteSpace: "nowrap", flexShrink: 0 }}>
               {place.category}
             </span>
           </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-            <span style={{ fontSize: 12, color: "#767676" }}>🕐</span>
-            <span style={{ fontSize: 12, color: "#767676", letterSpacing: "-0.3px" }}>
+          <div style={{ display: "flex", alignItems: "flex-start", gap: 6, minWidth: 0 }}>
+            <span style={{ fontSize: 12, color: "#767676", flexShrink: 0, lineHeight: 1.4 }}>🕐</span>
+            <span style={{ fontSize: 12, color: "#767676", letterSpacing: "-0.3px", lineHeight: 1.4, wordBreak: "keep-all" }}>
               평일 {place.weekdayHours} / 주말 {place.weekendHours}
             </span>
           </div>
-          <div style={{ background: "#fff8e6", borderRadius: 9, padding: "8px 0", display: "flex", alignItems: "center", marginTop: 4 }}>
+          <div style={{ background: "#fff8e6", borderRadius: 9, padding: "8px 0", display: "flex", alignItems: "center", marginTop: "auto" }}>
             {[
               { icon: "🔈", label: "소음도", value: place.noiseLevel },
               { icon: "🏠", label: "규모", value: place.size },
@@ -293,17 +295,32 @@ export default function MapPageClient() {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [selectedFilter, setSelectedFilter] = useState("전체 보물함");
   const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState<Place[] | null>(null);
   const [sheetTop, setSheetTop] = useState(() =>
     searchParams.get("selected") ? SHEET_DEFAULT : SHEET_DEFAULT
   );
   const [isSnapping, setIsSnapping] = useState(false);
-  const [recommendedIds, setRecommendedIds] = useState<number[] | null>(() => {
-    if (typeof window === "undefined") return null;
+  const [recommendedIds, setRecommendedIds] = useState<number[] | null>(null);
+  const [userLocation, setUserLocation] = useState<GeoPoint | undefined>(undefined);
+
+  useEffect(() => {
     try {
       const raw = sessionStorage.getItem("spotyu_recommended_ids");
-      return raw ? JSON.parse(raw) : null;
-    } catch { return null; }
-  });
+      if (raw) setRecommendedIds(JSON.parse(raw));
+    } catch {}
+  }, []);
+
+  useEffect(() => {
+    if (!navigator.geolocation) {
+      setUserLocation(FALLBACK_LOCATION);
+      return;
+    }
+    navigator.geolocation.getCurrentPosition(
+      (pos) => setUserLocation({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
+      () => setUserLocation(FALLBACK_LOCATION),
+      { timeout: 5000 }
+    );
+  }, []);
 
   const dragRef = useRef({ active: false, startY: 0, startTop: SHEET_DEFAULT, lastTop: SHEET_DEFAULT });
 
@@ -358,15 +375,24 @@ export default function MapPageClient() {
     e.preventDefault();
   }
 
-  const filteredPlaces = allPlaces.filter((p) => {
-    if (recommendedIds) return recommendedIds.includes(p.id);
-    const matchesFilter = selectedFilter === "전체 보물함" ? true : p.treasureType === selectedFilter;
+  // 검색어 디바운스 → 백엔드 검색 API
+  useEffect(() => {
     const q = searchQuery.trim();
-    const matchesSearch = q === "" ? true :
-      p.name.includes(q) || p.category.includes(q) || p.address.includes(q) ||
-      (p.treasureType ?? "").includes(q) || p.visitTags.some(t => t.includes(q));
-    return matchesFilter && matchesSearch;
-  });
+    if (!q) { setSearchResults(null); return; }
+    const timer = setTimeout(() => {
+      searchPlaces(q).then(setSearchResults).catch(() => setSearchResults(null));
+    }, 350);
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
+
+  const filteredPlaces = (() => {
+    if (searchResults !== null) return searchResults;
+    if (recommendedIds !== null && recommendedIds.length > 0)
+      return allPlaces.filter((p) => recommendedIds.includes(p.id));
+    if (selectedFilter !== "전체 보물함")
+      return allPlaces.filter((p) => p.treasureType === selectedFilter);
+    return allPlaces;
+  })();
 
   function dismissRecommendation() {
     sessionStorage.removeItem("spotyu_recommended_ids");
@@ -394,20 +420,13 @@ export default function MapPageClient() {
                 setIsSnapping(true);
                 setSheetTop(SHEET_DEFAULT);
               }}
+              userLocation={userLocation}
+              sheetTop={sheetTop}
             />
           </div>
 
           {/* 현재위치 글로우 + 정적 핀은 카카오 지도가 마커로 대체하므로 제거 */}
 
-          {/* Status bar */}
-          <div style={{ position: "absolute", top: 0, left: "50%", transform: "translateX(-50%)", width: 388, height: 43, overflow: "hidden", zIndex: 20 }}>
-            <div style={{ position: "absolute", right: 24, top: 16.33, width: 64.341, height: 11.337 }}>
-              <img src={imgStatusIcons} alt="" style={{ width: "100%", height: "100%" }} />
-            </div>
-            <p style={{ position: "absolute", left: "50%", transform: "translateX(-50%)", top: 12, fontSize: 15, fontWeight: 600, color: "#111", letterSpacing: "-0.5px", lineHeight: "20px" }}>
-              9:41
-            </p>
-          </div>
 
           {/* Header – SPOTYU + bell + person SVG icons */}
           <div style={{ position: "absolute", top: 43, left: 0, width: 390, height: 46, zIndex: 20, display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 24px", boxSizing: "border-box" }}>
@@ -433,10 +452,8 @@ export default function MapPageClient() {
                   fontSize: 14, color: "#111", letterSpacing: "-0.08px",
                 }}
               />
-              {searchQuery ? (
-                <button onClick={() => setSearchQuery("")} style={{ background: "none", border: "none", cursor: "pointer", fontSize: 16, color: "#aaa", padding: 0 }}>✕</button>
-              ) : (
-                <span style={{ fontSize: 17, color: "#767676" }}>🎙️</span>
+              {searchQuery && (
+                <button onClick={() => { setSearchQuery(""); setSearchResults(null); }} style={{ background: "none", border: "none", cursor: "pointer", fontSize: 16, color: "#aaa", padding: 0 }}>✕</button>
               )}
             </div>
           </div>
@@ -499,7 +516,7 @@ export default function MapPageClient() {
           </div>
 
           {/* AI 추천 배너 */}
-          {recommendedIds && (
+          {recommendedIds !== null && (
             <div style={{
               position: "absolute", left: 16, right: 16,
               top: sheetTop - 48, zIndex: sheetZIndex + 1,
@@ -509,7 +526,9 @@ export default function MapPageClient() {
               boxShadow: "0px 2px 8px rgba(0,0,0,0.15)",
               transition: isSnapping ? "top 0.3s cubic-bezier(0.25,0.46,0.45,0.94)" : "none",
             }}>
-              <span style={{ fontSize: 13, fontWeight: 600, color: "#111" }}>✨ AI 추천 장소 {recommendedIds.length}곳</span>
+              <span style={{ fontSize: 13, fontWeight: 600, color: "#111" }}>
+                ✨ AI 추천 장소 {recommendedIds.length}곳
+              </span>
               <button
                 onClick={dismissRecommendation}
                 style={{ background: "none", border: "none", fontSize: 12, color: "#555", cursor: "pointer", fontWeight: 500 }}
