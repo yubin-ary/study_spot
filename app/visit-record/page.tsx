@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-const imgStatusIcons = "/assets/b655a4944c744b18f533b9c4e87522b5f1e0f728.svg";
 
 const WEEKDAYS = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
 const MONTHS = ["1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월"];
@@ -109,15 +108,6 @@ export default function VisitRecordPage() {
           className="border-2 border-[#111] border-solid overflow-clip relative rounded-[25px]"
           style={{ width: "100%", height: "100%", background: "#fff" }}
         >
-          <div className="absolute overflow-clip" style={{ top: 0, left: "50%", transform: "translateX(-50%)", width: 388, height: 43 }}>
-            <div className="absolute" style={{ right: 24, top: 16.33, width: 64.341, height: 11.337 }}>
-              <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgStatusIcons} />
-            </div>
-            <p className="absolute text-center" style={{ left: "50%", transform: "translateX(-50%)", top: 12, fontSize: 15, fontWeight: 600, lineHeight: "20px", letterSpacing: "-0.5px", color: "#111" }}>
-              9:41
-            </p>
-          </div>
-
           <div className="absolute" style={{ top: 50, left: 0, width: "100%", height: 50, display: "flex", alignItems: "center" }}>
             <button
               onClick={() => router.back()}

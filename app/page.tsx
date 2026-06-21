@@ -33,16 +33,6 @@ export default function SplashPage() {
             <img alt="" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", display: "block" }} src={imgHill} />
           </div>
 
-          {/* 상태바 */}
-          <div style={{ position: "absolute", top: 0, left: "50%", transform: "translateX(-50%)", width: 388, height: 43, overflow: "hidden" }}>
-            <div style={{ position: "absolute", right: 24, top: 16.33, width: 64.341, height: 11.337 }}>
-              <img alt="" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", display: "block" }} src={imgStatusIcons} />
-            </div>
-            <p style={{ position: "absolute", left: "50%", transform: "translateX(-50%)", top: 12, width: 52, height: 20, fontSize: 15, fontWeight: 600, lineHeight: "20px", letterSpacing: "-0.5px", color: "#111", textAlign: "center", margin: 0 }}>
-              9:41
-            </p>
-          </div>
-
           {/* SPOTYU 타이틀 — 그라디언트 */}
           <p style={{
             position: "absolute", left: 32, top: 130,

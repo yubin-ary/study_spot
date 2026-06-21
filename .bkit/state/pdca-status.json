@@ -1,6 +1,6 @@
 {
   "version": "3.0",
-  "lastUpdated": "2026-06-19T11:28:32.433Z",
+  "lastUpdated": "2026-06-21T15:20:11.346Z",
   "activeFeatures": [
     "study-spot",
     "onboarding",
@@ -9,7 +9,19 @@
     "data",
     "map",
     "recommend",
-    "[id]"
+    "[id]",
+    "theme",
+    "bookmarks",
+    "[island]",
+    "review",
+    "reviewService.ts",
+    "condition",
+    "[type]",
+    "loading",
+    "placeService.ts",
+    "bookmarkService.ts",
+    "reviews",
+    "visitHistoryService.ts"
   ],
   "primaryFeature": "study-spot",
   "features": {
@@ -22,7 +34,7 @@
       "documents": {},
       "timestamps": {
         "started": "2026-06-18T07:48:56.562Z",
-        "lastUpdated": "2026-06-18T08:09:05.846Z"
+        "lastUpdated": "2026-06-21T15:20:11.344Z"
       },
       "lastFile": "/Users/yv073/likeLion/study_spot/study-spot/app/page.tsx"
     },
@@ -35,7 +47,7 @@
       "documents": {},
       "timestamps": {
         "started": "2026-06-18T07:56:03.562Z",
-        "lastUpdated": "2026-06-19T10:21:06.887Z"
+        "lastUpdated": "2026-06-21T07:43:11.609Z"
       },
       "lastFile": "/Users/yv073/likeLion/study_spot/study-spot/app/onboarding/page.tsx"
     },
@@ -48,7 +60,7 @@
       "documents": {},
       "timestamps": {
         "started": "2026-06-18T08:14:53.217Z",
-        "lastUpdated": "2026-06-19T10:24:34.009Z"
+        "lastUpdated": "2026-06-21T07:46:34.217Z"
       },
       "lastFile": "/Users/yv073/likeLion/study_spot/study-spot/app/status/purpose/page.tsx"
     },
@@ -61,7 +73,7 @@
       "documents": {},
       "timestamps": {
         "started": "2026-06-18T08:15:17.690Z",
-        "lastUpdated": "2026-06-19T10:21:23.497Z"
+        "lastUpdated": "2026-06-21T07:45:20.603Z"
       },
       "lastFile": "/Users/yv073/likeLion/study_spot/study-spot/app/status/duration/page.tsx"
     },
@@ -74,7 +86,7 @@
       "documents": {},
       "timestamps": {
         "started": "2026-06-19T09:03:53.137Z",
-        "lastUpdated": "2026-06-19T09:03:53.138Z"
+        "lastUpdated": "2026-06-21T14:39:52.149Z"
       },
       "lastFile": "/Users/yv073/likeLion/study_spot/study-spot/app/data/mockPlaces.ts"
     },
@@ -87,9 +99,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-06-19T09:05:14.647Z",
-        "lastUpdated": "2026-06-19T11:28:32.431Z"
+        "lastUpdated": "2026-06-21T14:43:56.445Z"
       },
-      "lastFile": "/Users/yv073/likeLion/study_spot/study-spot/app/map/page.tsx"
+      "lastFile": "/Users/yv073/likeLion/study_spot/study-spot/app/map/KakaoMapView.tsx"
     },
     "recommend": {
       "phase": "do",
@@ -100,7 +112,7 @@
       "documents": {},
       "timestamps": {
         "started": "2026-06-19T10:21:01.962Z",
-        "lastUpdated": "2026-06-19T10:21:01.963Z"
+        "lastUpdated": "2026-06-21T08:36:31.745Z"
       },
       "lastFile": "/Users/yv073/likeLion/study_spot/study-spot/app/api/recommend/route.ts"
     },
@@ -113,9 +125,165 @@
       "documents": {},
       "timestamps": {
         "started": "2026-06-19T10:27:22.310Z",
-        "lastUpdated": "2026-06-19T11:27:04.527Z"
+        "lastUpdated": "2026-06-21T12:20:16.952Z"
       },
       "lastFile": "/Users/yv073/likeLion/study_spot/study-spot/app/place/[id]/page.tsx"
+    },
+    "theme": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-06-20T04:59:48.862Z",
+        "lastUpdated": "2026-06-21T14:40:14.391Z"
+      },
+      "lastFile": "/Users/yv073/likeLion/study_spot/study-spot/app/theme/page.tsx"
+    },
+    "bookmarks": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-06-20T05:02:59.415Z",
+        "lastUpdated": "2026-06-21T14:20:41.304Z"
+      },
+      "lastFile": "/Users/yv073/likeLion/study_spot/study-spot/app/bookmarks/page.tsx"
+    },
+    "[island]": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-06-20T05:26:04.306Z",
+        "lastUpdated": "2026-06-20T05:26:04.307Z"
+      },
+      "lastFile": "/Users/yv073/likeLion/study_spot/study-spot/app/theme/[island]/page.tsx"
+    },
+    "review": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-06-20T05:47:57.901Z",
+        "lastUpdated": "2026-06-21T09:29:56.966Z"
+      },
+      "lastFile": "/Users/yv073/likeLion/study_spot/study-spot/app/place/[id]/review/page.tsx"
+    },
+    "reviewService.ts": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-06-20T05:59:22.657Z",
+        "lastUpdated": "2026-06-21T08:41:19.025Z"
+      },
+      "lastFile": "/Users/yv073/likeLion/study_spot/study-spot/app/services/reviewService.ts"
+    },
+    "condition": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-06-21T07:08:09.744Z",
+        "lastUpdated": "2026-06-21T07:46:07.948Z"
+      },
+      "lastFile": "/Users/yv073/likeLion/study_spot/study-spot/app/status/condition/page.tsx"
+    },
+    "[type]": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-06-21T07:17:55.590Z",
+        "lastUpdated": "2026-06-21T14:40:26.026Z"
+      },
+      "lastFile": "/Users/yv073/likeLion/study_spot/study-spot/app/theme/[type]/page.tsx"
+    },
+    "loading": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-06-21T07:52:06.214Z",
+        "lastUpdated": "2026-06-21T07:55:13.229Z"
+      },
+      "lastFile": "/Users/yv073/likeLion/study_spot/study-spot/app/status/loading/page.tsx"
+    },
+    "placeService.ts": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-06-21T08:45:11.899Z",
+        "lastUpdated": "2026-06-21T14:40:04.342Z"
+      },
+      "lastFile": "/Users/yv073/likeLion/study_spot/study-spot/app/services/placeService.ts"
+    },
+    "bookmarkService.ts": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-06-21T08:51:07.016Z",
+        "lastUpdated": "2026-06-21T08:51:07.016Z"
+      },
+      "lastFile": "/Users/yv073/likeLion/study_spot/study-spot/app/services/bookmarkService.ts"
+    },
+    "reviews": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-06-21T08:55:31.044Z",
+        "lastUpdated": "2026-06-21T08:55:31.045Z"
+      },
+      "lastFile": "/Users/yv073/likeLion/study_spot/study-spot/app/place/[id]/reviews/page.tsx"
+    },
+    "visitHistoryService.ts": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-06-21T09:29:40.504Z",
+        "lastUpdated": "2026-06-21T09:29:40.504Z"
+      },
+      "lastFile": "/Users/yv073/likeLion/study_spot/study-spot/app/services/visitHistoryService.ts"
     }
   },
   "pipeline": {
@@ -126,7 +294,7 @@
   "session": {
     "startedAt": "2026-06-18T07:47:42.287Z",
     "onboardingCompleted": false,
-    "lastActivity": "2026-06-19T11:28:32.433Z"
+    "lastActivity": "2026-06-21T15:20:11.346Z"
   },
   "history": [
     {
@@ -564,6 +732,1440 @@
     {
       "timestamp": "2026-06-19T11:28:32.433Z",
       "feature": "map",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-20T04:57:00.765Z",
+      "feature": "map",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-20T04:59:48.864Z",
+      "feature": "theme",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-20T04:59:53.452Z",
+      "feature": "theme",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-20T04:59:58.382Z",
+      "feature": "theme",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-20T05:01:04.897Z",
+      "feature": "theme",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-20T05:02:59.417Z",
+      "feature": "bookmarks",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-20T05:03:14.064Z",
+      "feature": "bookmarks",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-20T05:03:19.480Z",
+      "feature": "bookmarks",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-20T05:11:09.247Z",
+      "feature": "bookmarks",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-20T05:11:41.567Z",
+      "feature": "bookmarks",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-20T05:11:54.059Z",
+      "feature": "bookmarks",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-20T05:11:58.110Z",
+      "feature": "bookmarks",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-20T05:12:03.321Z",
+      "feature": "theme",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-20T05:12:07.525Z",
+      "feature": "map",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-20T05:12:10.956Z",
+      "feature": "purpose",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-20T05:12:14.877Z",
+      "feature": "purpose",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-20T05:12:23.236Z",
+      "feature": "purpose",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-20T05:14:22.844Z",
+      "feature": "bookmarks",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-20T05:14:58.054Z",
+      "feature": "bookmarks",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-20T05:16:30.710Z",
+      "feature": "bookmarks",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-20T05:18:03.146Z",
+      "feature": "[id]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-20T05:18:12.707Z",
+      "feature": "[id]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-20T05:18:19.157Z",
+      "feature": "[id]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-20T05:18:24.518Z",
+      "feature": "bookmarks",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-20T05:18:30.229Z",
+      "feature": "bookmarks",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-20T05:20:48.436Z",
+      "feature": "data",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-20T05:21:14.150Z",
+      "feature": "map",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-20T05:21:21.489Z",
+      "feature": "map",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-20T05:21:29.822Z",
+      "feature": "map",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-20T05:21:36.689Z",
+      "feature": "bookmarks",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-20T05:21:51.384Z",
+      "feature": "bookmarks",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-20T05:21:56.354Z",
+      "feature": "bookmarks",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-20T05:26:04.309Z",
+      "feature": "[island]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-20T05:31:21.731Z",
+      "feature": "[id]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-20T05:31:51.652Z",
+      "feature": "bookmarks",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-20T05:32:02.738Z",
+      "feature": "theme",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-20T05:32:19.125Z",
+      "feature": "[id]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-20T05:34:23.666Z",
+      "feature": "bookmarks",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-20T05:34:37.819Z",
+      "feature": "bookmarks",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-20T05:34:44.105Z",
+      "feature": "theme",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-20T05:34:58.929Z",
+      "feature": "theme",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-20T05:35:07.364Z",
+      "feature": "[id]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-20T05:36:12.527Z",
+      "feature": "bookmarks",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-20T05:36:17.701Z",
+      "feature": "theme",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-20T05:36:21.240Z",
+      "feature": "[id]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-20T05:40:46.939Z",
+      "feature": "bookmarks",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-20T05:40:59.296Z",
+      "feature": "theme",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-20T05:43:26.702Z",
+      "feature": "[id]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-20T05:47:57.904Z",
+      "feature": "review",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-20T05:48:05.079Z",
+      "feature": "[id]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-20T05:48:08.688Z",
+      "feature": "[id]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-20T05:48:20.790Z",
+      "feature": "[id]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-20T05:48:28.367Z",
+      "feature": "[id]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-20T05:51:18.686Z",
+      "feature": "review",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-20T05:51:23.964Z",
+      "feature": "review",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-20T05:51:29.191Z",
+      "feature": "review",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-20T05:51:36.545Z",
+      "feature": "review",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-20T05:51:40.585Z",
+      "feature": "[id]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-20T05:53:30.576Z",
+      "feature": "review",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-20T05:55:20.572Z",
+      "feature": "review",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-20T05:55:28.957Z",
+      "feature": "review",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-20T05:55:33.306Z",
+      "feature": "review",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-20T05:55:38.234Z",
+      "feature": "review",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-20T05:55:46.726Z",
+      "feature": "review",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-20T05:55:50.552Z",
+      "feature": "review",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-20T05:56:58.486Z",
+      "feature": "review",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-20T05:59:22.659Z",
+      "feature": "reviewService.ts",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-20T06:00:17.889Z",
+      "feature": "review",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-20T06:00:27.750Z",
+      "feature": "[id]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-20T06:00:39.496Z",
+      "feature": "[id]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-20T06:00:43.034Z",
+      "feature": "[id]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-20T06:04:40.875Z",
+      "feature": "study-spot",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-20T06:04:44.717Z",
+      "feature": "bookmarks",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-20T06:05:05.937Z",
+      "feature": "[id]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-20T06:06:33.420Z",
+      "feature": "[id]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-20T06:08:14.648Z",
+      "feature": "[id]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-20T06:08:21.078Z",
+      "feature": "[id]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-20T06:08:28.444Z",
+      "feature": "[id]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-20T06:09:27.664Z",
+      "feature": "theme",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-20T06:11:30.470Z",
+      "feature": "bookmarks",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-20T06:11:39.106Z",
+      "feature": "bookmarks",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T06:57:43.241Z",
+      "feature": "map",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T06:57:51.571Z",
+      "feature": "map",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T06:58:03.661Z",
+      "feature": "map",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T07:08:09.745Z",
+      "feature": "condition",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T07:08:23.042Z",
+      "feature": "purpose",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T07:08:35.250Z",
+      "feature": "purpose",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T07:08:56.926Z",
+      "feature": "duration",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T07:10:42.290Z",
+      "feature": "study-spot",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T07:12:59.074Z",
+      "feature": "study-spot",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T07:17:55.593Z",
+      "feature": "[type]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T07:18:02.078Z",
+      "feature": "map",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T07:18:30.912Z",
+      "feature": "bookmarks",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T07:18:38.215Z",
+      "feature": "map",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T07:21:20.330Z",
+      "feature": "map",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T07:21:26.928Z",
+      "feature": "map",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T07:21:31.425Z",
+      "feature": "map",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T07:22:28.702Z",
+      "feature": "condition",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T07:22:36.121Z",
+      "feature": "purpose",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T07:22:40.000Z",
+      "feature": "purpose",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T07:22:43.378Z",
+      "feature": "purpose",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T07:23:33.256Z",
+      "feature": "map",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T07:25:27.154Z",
+      "feature": "map",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T07:25:34.119Z",
+      "feature": "map",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T07:25:37.983Z",
+      "feature": "map",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T07:25:58.378Z",
+      "feature": "map",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T07:26:22.978Z",
+      "feature": "condition",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T07:26:30.601Z",
+      "feature": "purpose",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T07:26:54.567Z",
+      "feature": "map",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T07:27:28.591Z",
+      "feature": "map",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T07:27:33.162Z",
+      "feature": "map",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T07:29:53.863Z",
+      "feature": "map",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T07:31:34.149Z",
+      "feature": "map",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T07:32:08.451Z",
+      "feature": "map",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T07:35:14.462Z",
+      "feature": "map",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T07:35:19.939Z",
+      "feature": "map",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T07:35:25.155Z",
+      "feature": "map",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T07:35:30.594Z",
+      "feature": "map",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T07:35:35.810Z",
+      "feature": "map",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T07:36:20.651Z",
+      "feature": "map",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T07:36:28.408Z",
+      "feature": "map",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T07:39:52.552Z",
+      "feature": "study-spot",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T07:43:11.611Z",
+      "feature": "onboarding",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T07:44:22.979Z",
+      "feature": "study-spot",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T07:45:03.115Z",
+      "feature": "duration",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T07:45:20.606Z",
+      "feature": "duration",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T07:46:07.951Z",
+      "feature": "condition",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T07:46:34.219Z",
+      "feature": "purpose",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T07:46:40.779Z",
+      "feature": "map",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T07:46:46.731Z",
+      "feature": "[type]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T07:52:06.217Z",
+      "feature": "loading",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T07:53:20.482Z",
+      "feature": "loading",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T07:53:56.220Z",
+      "feature": "loading",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T07:54:12.278Z",
+      "feature": "loading",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T07:54:50.360Z",
+      "feature": "loading",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T07:54:54.399Z",
+      "feature": "loading",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T07:55:13.231Z",
+      "feature": "loading",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T07:56:15.594Z",
+      "feature": "map",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T07:59:16.907Z",
+      "feature": "map",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T07:59:22.684Z",
+      "feature": "map",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T08:00:48.040Z",
+      "feature": "map",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T08:00:55.215Z",
+      "feature": "map",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T08:04:07.453Z",
+      "feature": "map",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T08:13:10.949Z",
+      "feature": "map",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T08:13:48.432Z",
+      "feature": "map",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T08:19:05.882Z",
+      "feature": "map",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T08:19:15.991Z",
+      "feature": "map",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T08:21:12.084Z",
+      "feature": "map",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T08:25:04.797Z",
+      "feature": "map",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T08:25:41.344Z",
+      "feature": "map",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T08:25:50.775Z",
+      "feature": "map",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T08:27:11.712Z",
+      "feature": "recommend",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T08:27:20.991Z",
+      "feature": "map",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T08:30:35.003Z",
+      "feature": "map",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T08:30:41.269Z",
+      "feature": "map",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T08:30:48.281Z",
+      "feature": "map",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T08:30:52.809Z",
+      "feature": "map",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T08:36:31.747Z",
+      "feature": "recommend",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T08:36:39.043Z",
+      "feature": "map",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T08:38:48.819Z",
+      "feature": "[type]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T08:38:54.354Z",
+      "feature": "bookmarks",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T08:41:19.028Z",
+      "feature": "reviewService.ts",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T08:45:11.900Z",
+      "feature": "placeService.ts",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T08:45:19.803Z",
+      "feature": "[type]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T08:45:42.277Z",
+      "feature": "[type]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T08:45:50.861Z",
+      "feature": "map",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T08:46:08.707Z",
+      "feature": "map",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T08:46:18.149Z",
+      "feature": "map",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T08:46:23.523Z",
+      "feature": "map",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T08:51:07.018Z",
+      "feature": "bookmarkService.ts",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T08:51:12.840Z",
+      "feature": "bookmarks",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T08:51:19.597Z",
+      "feature": "bookmarks",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T08:51:38.897Z",
+      "feature": "[type]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T08:51:43.404Z",
+      "feature": "[type]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T08:51:47.414Z",
+      "feature": "[type]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T08:51:53.251Z",
+      "feature": "[type]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T08:51:57.991Z",
+      "feature": "[type]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T08:54:55.079Z",
+      "feature": "[id]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T08:55:31.047Z",
+      "feature": "reviews",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T08:58:49.169Z",
+      "feature": "data",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T08:58:55.508Z",
+      "feature": "placeService.ts",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T08:59:07.669Z",
+      "feature": "[id]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T08:59:14.851Z",
+      "feature": "[id]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T08:59:28.453Z",
+      "feature": "[id]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T09:01:12.055Z",
+      "feature": "map",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T09:03:33.437Z",
+      "feature": "data",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T09:03:38.554Z",
+      "feature": "placeService.ts",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T09:03:54.253Z",
+      "feature": "[id]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T09:29:40.506Z",
+      "feature": "visitHistoryService.ts",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T09:29:52.087Z",
+      "feature": "review",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T09:29:56.968Z",
+      "feature": "review",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T09:30:18.571Z",
+      "feature": "[id]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T09:30:28.624Z",
+      "feature": "[id]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T09:30:31.847Z",
+      "feature": "[id]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T09:30:57.580Z",
+      "feature": "[id]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T10:02:19.315Z",
+      "feature": "map",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T10:02:39.172Z",
+      "feature": "map",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T10:02:59.905Z",
+      "feature": "map",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T10:04:27.054Z",
+      "feature": "map",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T10:06:07.267Z",
+      "feature": "[id]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T10:09:28.721Z",
+      "feature": "placeService.ts",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T11:54:19.628Z",
+      "feature": "[type]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T11:54:23.421Z",
+      "feature": "[type]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T11:55:55.536Z",
+      "feature": "[type]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T11:56:02.212Z",
+      "feature": "[type]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T12:09:58.740Z",
+      "feature": "map",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T12:10:01.864Z",
+      "feature": "map",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T12:10:08.498Z",
+      "feature": "map",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T12:10:13.754Z",
+      "feature": "map",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T12:11:01.852Z",
+      "feature": "map",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T12:13:03.993Z",
+      "feature": "map",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T12:13:10.818Z",
+      "feature": "map",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T12:13:22.050Z",
+      "feature": "map",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T12:13:28.964Z",
+      "feature": "map",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T12:13:32.246Z",
+      "feature": "map",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T12:13:45.350Z",
+      "feature": "map",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T12:15:22.833Z",
+      "feature": "map",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T12:16:24.611Z",
+      "feature": "map",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T12:19:01.695Z",
+      "feature": "bookmarks",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T12:19:06.619Z",
+      "feature": "bookmarks",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T12:20:04.132Z",
+      "feature": "[id]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T12:20:16.954Z",
+      "feature": "[id]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T14:19:04.034Z",
+      "feature": "bookmarks",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T14:20:36.159Z",
+      "feature": "bookmarks",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T14:20:41.305Z",
+      "feature": "bookmarks",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T14:39:52.154Z",
+      "feature": "data",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T14:40:04.345Z",
+      "feature": "placeService.ts",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T14:40:14.394Z",
+      "feature": "theme",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T14:40:26.028Z",
+      "feature": "[type]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T14:43:13.018Z",
+      "feature": "map",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T14:43:23.057Z",
+      "feature": "map",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T14:43:34.906Z",
+      "feature": "map",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T14:43:56.450Z",
+      "feature": "map",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T15:11:27.083Z",
+      "feature": "study-spot",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T15:12:30.018Z",
+      "feature": "study-spot",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T15:13:27.476Z",
+      "feature": "study-spot",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T15:13:32.641Z",
+      "feature": "study-spot",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T15:15:27.377Z",
+      "feature": "study-spot",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-21T15:20:11.346Z",
+      "feature": "study-spot",
       "phase": "do",
       "action": "updated"
     }

@@ -107,11 +107,6 @@ export default function OnboardingPage() {
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
       >
-        {/* Status Bar */}
-        <div className="absolute top-0 left-0 right-0 flex justify-between items-center px-6" style={{ height: 44, paddingTop: 14 }}>
-          <span style={{ fontWeight: 600, fontSize: 15, letterSpacing: "-0.5px", color: "#111" }}>9:41</span>
-          <img src={STATUS_ICONS} alt="" style={{ height: 11.337, width: 64.341 }} />
-        </div>
 
         {/* Title + Desc */}
         <div

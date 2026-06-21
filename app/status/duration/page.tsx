@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-const imgStatusIcons = "/assets/cf8adf0c371ee4bab6d9c27869714c5a52b939c5.svg";
 const imgBackArrow = "/assets/45d8a0f6495680e676880af5da9c876d1c9d332b.svg";
 const imgSprite = "/assets/93f4b4820b17fbe3452435cdd0421d04ab86dd50.png";
 
@@ -35,15 +34,6 @@ export default function DurationPage() {
           className="bg-[#f8f8f8] border-2 border-[#111] border-solid overflow-clip relative rounded-[25px]"
           style={{ width: "100%", height: "100%" }}
         >
-          {/* Status bar */}
-          <div className="absolute overflow-clip" style={{ top: 0, left: "50%", transform: "translateX(-50%)", width: 388, height: 43 }}>
-            <div className="absolute" style={{ right: 24, top: 16.33, width: 64.341, height: 11.337 }}>
-              <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgStatusIcons} />
-            </div>
-            <p className="absolute text-center" style={{ left: "50%", transform: "translateX(-50%)", top: 12, fontSize: 15, fontWeight: 600, lineHeight: "20px", letterSpacing: "-0.5px", color: "#111" }}>
-              9:41
-            </p>
-          </div>
 
           {/* Header */}
           <div className="absolute" style={{ top: 45, left: 0, right: 0, height: 56 }}>

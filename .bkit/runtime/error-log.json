@@ -7,5 +7,32 @@
     "agentId": null,
     "agentType": null,
     "message": ""
+  },
+  {
+    "timestamp": "2026-06-21T08:48:27.542Z",
+    "errorType": "unknown",
+    "category": "unknown",
+    "severity": "low",
+    "agentId": null,
+    "agentType": null,
+    "message": ""
+  },
+  {
+    "timestamp": "2026-06-21T10:11:17.250Z",
+    "errorType": "unknown",
+    "category": "unknown",
+    "severity": "low",
+    "agentId": null,
+    "agentType": null,
+    "message": ""
+  },
+  {
+    "timestamp": "2026-06-21T10:11:59.315Z",
+    "errorType": "unknown",
+    "category": "unknown",
+    "severity": "low",
+    "agentId": null,
+    "agentType": null,
+    "message": ""
   }
 ]
