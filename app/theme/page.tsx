@@ -89,10 +89,8 @@ export default function ThemePage() {
   const touchStartX = useRef<number | null>(null);
 
   const [places, setPlaces] = useState<Place[]>([]);
-  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    setIsMobile(window.innerWidth <= 500);
     getPlaces()
       .then((data) => setPlaces(data))
       .catch((err) => console.error("장소 목록 로딩 실패:", err));
@@ -152,14 +150,14 @@ export default function ThemePage() {
 
           {/* Card carousel + dots */}
           <div
-            style={{ flexShrink: 0, position: "relative", height: isMobile ? 320 : 420, overflow: "visible" }}
+            style={{ flexShrink: 0, position: "relative", height: 420, overflow: "visible" }}
             onTouchStart={handleTouchStart}
             onTouchEnd={handleTouchEnd}
           >
             {ISLANDS.map((isl, i) => {
               const offset = i - index;
-              const CARD_W = isMobile ? 260 : 318;
-              const GAP = isMobile ? 276 : 334;
+              const CARD_W = 318;
+              const GAP = 334;
               const x = offset * GAP;
               const isActive = offset === 0;
               const c = countByCategory(places, isl.type);
@@ -172,7 +170,7 @@ export default function ThemePage() {
                     top: isActive ? 0 : 16,
                     left: "50%",
                     width: CARD_W,
-                    height: isActive ? (isMobile ? 320 : 420) : (isMobile ? 295 : 390),
+                    height: isActive ? 420 : 390,
                     transform: `translateX(calc(-50% + ${x}px))`,
                     transition: "transform 0.35s cubic-bezier(0.25,0.46,0.45,0.94), top 0.35s, height 0.35s, opacity 0.35s",
                     backgroundColor: "#ffc933",
@@ -190,7 +188,7 @@ export default function ThemePage() {
                 >
                   <p style={{ fontSize: 21, fontWeight: 800, color: "#3a2e10", letterSpacing: "-0.5px" }}>{isl.type}</p>
                   <p style={{ marginTop: 6, fontSize: 12, fontWeight: 600, color: "#6b5a28", letterSpacing: "-0.3px" }}>{isl.subtitle}</p>
-                  <div style={{ marginTop: 12, width: isMobile ? 150 : 200, height: isMobile ? 120 : 170, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  <div style={{ marginTop: 16, width: 200, height: 170, display: "flex", alignItems: "center", justifyContent: "center" }}>
                     <img src={isl.image} alt={isl.type} style={{ width: "100%", height: "100%", objectFit: "contain" }} />
                   </div>
                   <div style={{ marginTop: 18, width: "100%", maxWidth: 240 }}>
