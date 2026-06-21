@@ -393,11 +393,12 @@ export default function MapPageClient() {
 
   const filteredPlaces = (() => {
     if (searchResults !== null) return searchResults;
+    let base = allPlaces;
     if (recommendedIds !== null && recommendedIds.length > 0)
-      return allPlaces.filter((p) => recommendedIds.includes(p.id));
+      base = base.filter((p) => recommendedIds.includes(p.id));
     if (selectedFilter !== "전체 보물함")
-      return allPlaces.filter((p) => p.treasureType === selectedFilter);
-    return allPlaces;
+      base = base.filter((p) => p.treasureType === selectedFilter);
+    return base;
   })();
 
   function dismissRecommendation() {
