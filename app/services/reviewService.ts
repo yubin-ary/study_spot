@@ -1,4 +1,4 @@
-const BASE_URL = "http://15.164.231.65:8080";
+const BASE_URL = "/api/backend";
 const DEFAULT_USER_ID = 1;
 
 export interface Review {

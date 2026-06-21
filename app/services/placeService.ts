@@ -1,6 +1,6 @@
 import { Place, Category, TreasureType } from "../data/mockPlaces";
 
-const BASE_URL = "http://15.164.231.65:8080";
+const BASE_URL = "/api/backend";
 
 interface ApiPlace {
   id: number;
