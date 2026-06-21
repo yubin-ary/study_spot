@@ -302,6 +302,7 @@ export default function MapPageClient() {
   const [isSnapping, setIsSnapping] = useState(false);
   const [recommendedIds, setRecommendedIds] = useState<number[] | null>(null);
   const [userLocation, setUserLocation] = useState<GeoPoint | undefined>(undefined);
+  const [centerTrigger, setCenterTrigger] = useState(0);
 
   useEffect(() => {
     try {
@@ -422,10 +423,40 @@ export default function MapPageClient() {
               }}
               userLocation={userLocation}
               sheetTop={sheetTop}
+              centerTrigger={centerTrigger}
             />
           </div>
 
-          {/* 현재위치 글로우 + 정적 핀은 카카오 지도가 마커로 대체하므로 제거 */}
+          {/* 현재위치 버튼 */}
+          <button
+            onClick={() => {
+              if (!navigator.geolocation) return;
+              navigator.geolocation.getCurrentPosition(
+                (pos) => {
+                  setUserLocation({ lat: pos.coords.latitude, lng: pos.coords.longitude });
+                  setCenterTrigger((t) => t + 1);
+                },
+                () => setCenterTrigger((t) => t + 1),
+                { timeout: 5000 },
+              );
+            }}
+            style={{
+              position: "absolute", right: 16, top: Math.max(SHEET_DEFAULT - 60, sheetTop - 60), zIndex: sheetZIndex - 1,
+              width: 44, height: 44, borderRadius: "50%",
+              background: "#fff", border: "none", cursor: "pointer",
+              boxShadow: "0 2px 8px rgba(0,0,0,0.2)",
+              display: "flex", alignItems: "center", justifyContent: "center",
+            }}
+          >
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="12" r="4" fill="#ffbf00" />
+              <circle cx="12" cy="12" r="8" stroke="#ffbf00" strokeWidth="1.5" fill="none" />
+              <line x1="12" y1="2" x2="12" y2="5" stroke="#ffbf00" strokeWidth="2" strokeLinecap="round" />
+              <line x1="12" y1="19" x2="12" y2="22" stroke="#ffbf00" strokeWidth="2" strokeLinecap="round" />
+              <line x1="2" y1="12" x2="5" y2="12" stroke="#ffbf00" strokeWidth="2" strokeLinecap="round" />
+              <line x1="19" y1="12" x2="22" y2="12" stroke="#ffbf00" strokeWidth="2" strokeLinecap="round" />
+            </svg>
+          </button>
 
 
           {/* Header – SPOTYU + bell + person SVG icons */}

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Place } from "../data/mockPlaces";
 
 declare global {
@@ -16,6 +16,7 @@ interface KakaoMapViewProps {
   onSelectPlace: (place: Place) => void;
   userLocation?: { lat: number; lng: number };
   sheetTop: number;
+  centerTrigger?: number;
 }
 
 const VISIBLE_MAP_TOP = 194; // 필터바 하단
@@ -34,11 +35,15 @@ export default function KakaoMapView({
   onSelectPlace,
   userLocation,
   sheetTop,
+  centerTrigger,
 }: KakaoMapViewProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<any>(null);
   const markersRef = useRef<Map<number, any>>(new Map());
+  const pinElsRef = useRef<Map<number, HTMLDivElement>>(new Map());
   const sheetTopRef = useRef(sheetTop);
+  const glowOverlayRef = useRef<any>(null);
+  const [mapReady, setMapReady] = useState(false);
   useEffect(() => { sheetTopRef.current = sheetTop; }, [sheetTop]);
 
   useEffect(() => {
@@ -57,22 +62,7 @@ export default function KakaoMapView({
         center,
         level: 5,
       });
-
-      if (userLocation) {
-        setTimeout(() => {
-          if (mapRef.current) mapRef.current.panBy(0, getVisibleCenterOffset(sheetTopRef.current));
-        }, 0);
-        const pos = new window.kakao.maps.LatLng(userLocation.lat, userLocation.lng);
-        const glowHtml = `
-          <div style="position:relative;width:24px;height:24px;transform:translate(-50%,-50%)">
-            <div style="position:absolute;inset:0;border-radius:50%;background:rgba(66,133,244,0.25);animation:glow-pulse 2s ease-in-out infinite"></div>
-            <div style="position:absolute;inset:4px;border-radius:50%;background:#4285f4;border:2.5px solid #fff;box-shadow:0 0 6px rgba(66,133,244,0.6)"></div>
-          </div>
-          <style>@keyframes glow-pulse{0%,100%{transform:translate(-50%,-50%) scale(1);opacity:0.7}50%{transform:translate(-50%,-50%) scale(1.8);opacity:0}}</style>
-        `;
-        const overlay = new window.kakao.maps.CustomOverlay({ position: pos, content: glowHtml, zIndex: 20 });
-        overlay.setMap(mapRef.current);
-      }
+      setMapReady(true);
     }
 
     if (window.kakao && window.kakao.maps) {
@@ -105,23 +95,54 @@ export default function KakaoMapView({
 
     markersRef.current.forEach((m) => m.setMap(null));
     markersRef.current = new Map();
+    pinElsRef.current = new Map();
+
+    const PIN_SHAPE: Record<string, string> = {
+      yellow:   "eed65a445c9579713b6e937826b3acb414ee182e.svg",
+      blue:     "78e7d437cbb64061fa6ee1485039af96f1780961.svg",
+      cyan:     "c3af32240219a77df411bc3a80160532ee541bd2.svg",
+      purple:   "cc1e772dd2e34ccfd2336b8bb203c5caa70ce082.svg",
+      lavender: "cc1e772dd2e34ccfd2336b8bb203c5caa70ce082.svg",
+    };
+    const STAR_WHITE = "1a913dfb1b2099f0b0ebfac754affbeca8db2b15.svg";
+    const STAR_YELLOW = "117ea0a25b7a3b7892a5ef5f3e4bd64deb33ce81.svg";
 
     places.forEach((place) => {
       const pos = new window.kakao.maps.LatLng(place.coordinates.lat, place.coordinates.lng);
-      const marker = new window.kakao.maps.Marker({ position: pos, map });
-      window.kakao.maps.event.addListener(marker, "click", () => {
-        onSelectPlace(place);
+      const shape = PIN_SHAPE[place.pinType] ?? PIN_SHAPE.yellow;
+      const star = (place.pinType === "purple" || place.pinType === "lavender") ? STAR_YELLOW : STAR_WHITE;
+
+      const pinEl = document.createElement("div");
+      pinEl.style.cssText = "position:relative;width:28px;height:42px;cursor:pointer;transition:width 0.15s,height 0.15s;";
+      pinEl.innerHTML = `
+        <img src="/assets/${shape}" style="position:absolute;inset:0 0 2% 0;width:100%;height:100%" />
+        <img src="/assets/${star}" style="position:absolute;top:11%;left:21%;width:58%;height:33%;object-fit:contain" />
+      `;
+      pinEl.addEventListener("click", () => onSelectPlace(place));
+
+      const overlay = new window.kakao.maps.CustomOverlay({
+        position: pos,
+        content: pinEl,
+        zIndex: 10,
+        xAnchor: 0.5,
+        yAnchor: 1,
       });
-      markersRef.current.set(place.id, marker);
+      overlay.setMap(map);
+      markersRef.current.set(place.id, overlay);
+      pinElsRef.current.set(place.id, pinEl);
     });
   }, [places, onSelectPlace]);
 
-  // 장소 선택 시 해당 마커만 표시
+  // 선택된 마커 크게 + 최상위, 나머지 작게
   useEffect(() => {
-    const map = mapRef.current;
-    if (!map) return;
-    markersRef.current.forEach((marker, id) => {
-      marker.setMap(selectedPlace === null ? map : id === selectedPlace.id ? map : null);
+    pinElsRef.current.forEach((el, id) => {
+      const isSelected = selectedPlace !== null && id === selectedPlace.id;
+      el.style.width  = isSelected ? "40px" : "22px";
+      el.style.height = isSelected ? "60px" : "33px";
+    });
+    markersRef.current.forEach((overlay, id) => {
+      const isSelected = selectedPlace !== null && id === selectedPlace.id;
+      overlay.setZIndex(isSelected ? 20 : 10);
     });
   }, [selectedPlace]);
 
@@ -142,35 +163,42 @@ export default function KakaoMapView({
 
   useEffect(() => {
     const map = mapRef.current;
+    if (!map || !userLocation || !window.kakao || centerTrigger === undefined) return;
+    const pos = new window.kakao.maps.LatLng(userLocation.lat, userLocation.lng);
+    map.setCenter(pos);
+    setTimeout(() => {
+      if (!mapRef.current) return;
+      mapRef.current.panBy(0, getVisibleCenterOffset(sheetTopRef.current));
+    }, 0);
+  }, [centerTrigger]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    const map = mapRef.current;
     if (!map || !userLocation || !window.kakao) return;
 
     const pos = new window.kakao.maps.LatLng(userLocation.lat, userLocation.lng);
 
-    // 지도 중심을 내 위치로 이동 후, 가시영역(필터바~시트) 정중앙에 오도록 오프셋
     map.setCenter(pos);
     setTimeout(() => {
       if (!mapRef.current) return;
       mapRef.current.panBy(0, getVisibleCenterOffset(sheetTopRef.current));
     }, 0);
 
-    // 글로우 도트 커스텀 오버레이
+    // 이전 글로우 제거 후 새로 그리기
+    if (glowOverlayRef.current) glowOverlayRef.current.setMap(null);
+
     const glowHtml = `
-      <div style="position:relative;width:24px;height:24px;transform:translate(-50%,-50%)">
-        <div style="position:absolute;inset:0;border-radius:50%;background:rgba(66,133,244,0.25);animation:glow-pulse 2s ease-in-out infinite"></div>
-        <div style="position:absolute;inset:4px;border-radius:50%;background:#4285f4;border:2.5px solid #fff;box-shadow:0 0 6px rgba(66,133,244,0.6)"></div>
+      <div style="position:relative;width:46px;height:46px;transform:translate(-50%,-50%)">
+        <img src="/assets/4fa12631f27ca7d087de38c1353cb4f45f04be7d.svg" style="position:absolute;inset:0;width:100%;height:100%" />
+        <img src="/assets/843fddce33436a5e7f0e81dd97a38b99e6cbe657.svg" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:10px;height:10px" />
       </div>
-      <style>@keyframes glow-pulse{0%,100%{transform:translate(-50%,-50%) scale(1);opacity:0.7}50%{transform:translate(-50%,-50%) scale(1.8);opacity:0}}</style>
     `;
-
-    const overlay = new window.kakao.maps.CustomOverlay({
-      position: pos,
-      content: glowHtml,
-      zIndex: 20,
-    });
+    const overlay = new window.kakao.maps.CustomOverlay({ position: pos, content: glowHtml, zIndex: 20 });
     overlay.setMap(map);
+    glowOverlayRef.current = overlay;
 
-    return () => overlay.setMap(null);
-  }, [userLocation]);
+    return () => { overlay.setMap(null); glowOverlayRef.current = null; };
+  }, [userLocation, mapReady]);
 
   return <div ref={containerRef} style={{ width: "100%", height: "100%" }} />;
 }

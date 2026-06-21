@@ -82,6 +82,7 @@ function toPlace(api: ApiPlace): Place {
     pinType: PIN_TYPES[api.id % PIN_TYPES.length],
     hasOutlet: api.hasOutlet,
     description: api.description,
+    islandTheme: api.theme,
   };
 }
 
@@ -103,6 +104,11 @@ export async function getPlace(placeId: number): Promise<Place> {
 }
 
 export async function getPlacesByTheme(theme: string): Promise<Place[]> {
+  // 비밀섬은 theme 필드가 아닌 hiddenSpot:true 로 구분
+  if (theme === "비밀섬") {
+    const all = await getPlaces();
+    return all.filter((p) => p.treasureType === "비밀섬");
+  }
   const res = await fetch(`${BASE_URL}/SPOTYU/places/theme/${encodeURIComponent(theme)}`);
   if (!res.ok) throw new Error(`테마 장소를 불러오지 못했어요 (${res.status})`);
   const json = await res.json();

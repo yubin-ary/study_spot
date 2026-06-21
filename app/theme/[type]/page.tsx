@@ -3,7 +3,7 @@
 import { use, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Place } from "../../data/mockPlaces";
-import { getPlacesByTheme } from "../../services/placeService";
+import { getPlaces } from "../../services/placeService";
 import { getBookmarks, addBookmark, removeBookmark, BookmarkEntry } from "../../services/bookmarkService";
 
 const imgBackArrow   = "/assets/45d8a0f6495680e676880af5da9c876d1c9d332b.svg";
@@ -125,7 +125,10 @@ export default function IslandPage({ params }: { params: Promise<{ type: string 
   const [bookmarkEntries, setBookmarkEntries] = useState<BookmarkEntry[]>([]);
 
   useEffect(() => {
-    getPlacesByTheme(islandName)
+    getPlaces()
+      .then((all) => all.filter((p) =>
+        islandName === "비밀섬" ? p.treasureType === "비밀섬" : p.islandTheme === islandName
+      ))
       .then(setPlaces)
       .catch((err) => console.error("테마 장소 로딩 실패:", err));
   }, [islandName]);

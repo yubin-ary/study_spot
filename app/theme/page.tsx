@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { Place } from "../data/mockPlaces";
 import { getPlaces } from "../services/placeService";
 
-const imgStatusIcons = "/assets/b655a4944c744b18f533b9c4e87522b5f1e0f728.svg";
 const imgNavBg = "/assets/4870fdf34b871dd7cc5520f60aad475b01c76985.svg";
 
 function IconCompass({ color }: { color: string }) {
@@ -66,7 +65,9 @@ const ISLANDS = [
 ] as const;
 
 function countByCategory(places: Place[], islandType: string) {
-  const filtered = places.filter((p) => p.treasureType === islandType);
+  const filtered = places.filter((p) =>
+    islandType === "비밀섬" ? p.treasureType === "비밀섬" : p.islandTheme === islandType
+  );
   return {
     total: filtered.length,
     카페: filtered.filter((p) => p.category === "카페").length,
@@ -121,15 +122,6 @@ export default function ThemePage() {
             background: "linear-gradient(180deg, #d6ecfb 0%, #eaf6fd 55%, #f5f1e3 100%)",
           }}
         >
-          <div className="absolute overflow-clip" style={{ top: 0, left: "50%", transform: "translateX(-50%)", width: 388, height: 43 }}>
-            <div className="absolute" style={{ right: 24, top: 16.33, width: 64.341, height: 11.337 }}>
-              <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgStatusIcons} />
-            </div>
-            <p className="absolute text-center" style={{ left: "50%", transform: "translateX(-50%)", top: 12, fontSize: 15, fontWeight: 600, lineHeight: "20px", letterSpacing: "-0.5px", color: "#111" }}>
-              9:41
-            </p>
-          </div>
-
          
           <div style={{ position: "absolute", top: 43, left: 0, width: 390, height: 46, zIndex: 20, display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 24px", boxSizing: "border-box" }}>
             <p style={{ fontSize: 23, fontWeight: 900, color: "#ffbf00", letterSpacing: "-0.575px", lineHeight: 1.5, whiteSpace: "nowrap" }}>

@@ -6,6 +6,7 @@ import mockPlaces, { Place } from "../../data/mockPlaces";
 import { getPlace } from "../../services/placeService";
 import { getReviews, type Review } from "../../services/reviewService";
 import { getVisitHistoriesByPlace, type VisitHistory } from "../../services/visitHistoryService";
+import { getBookmarks, addBookmark, removeBookmark, type BookmarkEntry } from "../../services/bookmarkService";
 
 // Assets
 const imgNavBg       = "/assets/4870fdf34b871dd7cc5520f60aad475b01c76985.svg";
@@ -74,41 +75,40 @@ const MOCK_REVIEWS = [
 ];
 
 
-const STORAGE_KEY = "spotyu_saved_places";
-
-function getSaved(): number[] {
-  if (typeof window === "undefined") return [];
-  try { return JSON.parse(localStorage.getItem(STORAGE_KEY) ?? "[]"); } catch { return []; }
-}
-
 export default function PlaceDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const router = useRouter();
   const { id } = use(params);
   const [place, setPlace] = useState<Place | null>(null);
-  const [saved, setSaved] = useState(false);
+  const [bookmarkEntry, setBookmarkEntry] = useState<BookmarkEntry | null>(null);
+  const saved = bookmarkEntry !== null;
   const [reviews, setReviews] = useState<Review[]>([]);
   const [visitHistories, setVisitHistories] = useState<VisitHistory[]>([]);
 
-  // 백엔드에서 이 장소 1건을 받아온다
   useEffect(() => {
     getPlace(Number(id))
       .then((data) => setPlace(data))
       .catch((err) => console.error("장소 정보 로딩 실패:", err));
+    getBookmarks().then(({ entries }) => {
+      const entry = entries.find((e) => e.placeId === Number(id));
+      setBookmarkEntry(entry ?? null);
+    });
   }, [id]);
 
   useEffect(() => {
     if (!place) return;
-    setSaved(getSaved().includes(place.id));
     getReviews(String(place.id)).then(setReviews);
     getVisitHistoriesByPlace(String(place.id)).then(setVisitHistories);
   }, [place]);
 
-  function toggleSave() {
+  async function toggleSave() {
     if (!place) return;
-    const list = getSaved();
-    const next = list.includes(place.id) ? list.filter((x) => x !== place.id) : [...list, place.id];
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
-    setSaved(next.includes(place.id));
+    if (bookmarkEntry) {
+      await removeBookmark(bookmarkEntry.bookmarkId);
+      setBookmarkEntry(null);
+    } else {
+      const newId = await addBookmark(place.id);
+      if (newId !== null) setBookmarkEntry({ bookmarkId: newId, placeId: place.id });
+    }
   }
 
   // 데이터가 아직 안 왔으면 로딩 표시
@@ -325,7 +325,9 @@ export default function PlaceDetailPage({ params }: { params: Promise<{ id: stri
             </div>
           </div>
 
-          {/* Fixed: Status bar */}
+          {/* Status bar 배경 (스크롤 시 틈 방지) */}
+          <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 43, zIndex: 30, background: "#fff" }} />
+
           {/* Fixed: Header */}
           <div style={{ position: "absolute", top: 43, left: 0, right: 0, height: 56, zIndex: 30, background: "#fff", display: "flex", alignItems: "center", justifyContent: "center" }}>
             <button

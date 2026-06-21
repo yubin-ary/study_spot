@@ -22,6 +22,7 @@ export interface Place {
   cleanliness: string;
   visitTags: string[];
   treasureType: TreasureType;
+  islandTheme?: string;
   pinType: "yellow" | "purple" | "cyan" | "lavender" | "blue";
   hasOutlet?: boolean;
   description?: string;

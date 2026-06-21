@@ -65,7 +65,10 @@ const CATEGORY_COLORS: Record<string, { bg: string; text: string }> = {
   스터디카페: { bg: "#e6e9ff", text: "#2474ed" },
 };
 
-function BookmarkCard({ place, onClick }: { place: Place; onClick: () => void }) {
+function BookmarkCard({ place, onClick, showBadge }: { place: Place; onClick: () => void; showBadge: boolean }) {
+  const nameTop = showBadge ? 37 : 26;
+  const hoursTop = showBadge ? 63 : 50;
+
   return (
     <div
       onClick={onClick}
@@ -85,12 +88,12 @@ function BookmarkCard({ place, onClick }: { place: Place; onClick: () => void })
       </div>
 
       {/* Left image – narrow vertical */}
-      <div style={{ position: "absolute", left: 16, top: 16, width: 58, height: 126, borderRadius: 5, overflow: "hidden", background: "#eee" }}>
+      <div style={{ position: "absolute", left: 16, top: 16, bottom: 16, width: 58, borderRadius: 5, overflow: "hidden", background: "#eee" }}>
         <img src={place.imageUrl} alt={place.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
       </div>
 
-      {/* Island type badge */}
-      {place.treasureType && (
+      {/* Island type badge – 전체 탭에서만 표시 */}
+      {showBadge && place.treasureType && (
         <div style={{
           position: "absolute", left: 89, top: 16,
           background: "#ffc822", borderRadius: 23, padding: "3px 14px",
@@ -103,14 +106,14 @@ function BookmarkCard({ place, onClick }: { place: Place; onClick: () => void })
       )}
 
       {/* Place name */}
-      <div style={{ position: "absolute", left: 89, top: 37, right: 16 }}>
+      <div style={{ position: "absolute", left: 89, top: nameTop, right: 16 }}>
         <p style={{ fontSize: 16, fontWeight: 600, color: "#111", letterSpacing: "-0.4px", lineHeight: 1.5, margin: 0 }}>
           {place.name}
         </p>
       </div>
 
       {/* Hours */}
-      <div style={{ position: "absolute", left: 89, top: 63, right: 16, display: "flex", alignItems: "flex-start", gap: 6 }}>
+      <div style={{ position: "absolute", left: 89, top: hoursTop, right: 16, display: "flex", alignItems: "flex-start", gap: 6 }}>
         <span style={{ fontSize: 12, color: "#767676", flexShrink: 0 }}>🕐</span>
         <span style={{ fontSize: 12, color: "#767676", letterSpacing: "-0.3px", lineHeight: 1.3, overflow: "hidden", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical" }}>
           평일 {place.weekdayHours} / 주말 {place.weekendHours}
@@ -119,7 +122,7 @@ function BookmarkCard({ place, onClick }: { place: Place; onClick: () => void })
 
       {/* Info box */}
       <div style={{
-        position: "absolute", left: 89, right: 21, top: 103,
+        position: "absolute", left: 89, right: 16, bottom: 16,
         background: "#fff8e6", borderRadius: 9, padding: "6px 0",
         display: "flex",
       }}>
@@ -203,10 +206,8 @@ export default function BookmarksPage() {
                   fontSize: 14, color: "#111", letterSpacing: "-0.3px",
                 }}
               />
-              {searchQuery ? (
+              {searchQuery && (
                 <button onClick={() => setSearchQuery("")} style={{ background: "none", border: "none", cursor: "pointer", fontSize: 14, color: "#aaa", padding: 0 }}>✕</button>
-              ) : (
-                <span style={{ fontSize: 16, color: "#9a9a9a" }}>🎙️</span>
               )}
             </div>
           </div>
@@ -250,7 +251,7 @@ export default function BookmarksPage() {
               </p>
             ) : (
               filtered.map((place) =>
-                <BookmarkCard key={place.id} place={place} onClick={() => router.push(`/place/${place.id}`)} />
+                <BookmarkCard key={place.id} place={place} onClick={() => router.push(`/place/${place.id}`)} showBadge={filter === "전체"} />
               )
             )}
           </div>
