@@ -26,6 +26,8 @@ export interface Place {
   pinType: "yellow" | "purple" | "cyan" | "lavender" | "blue";
   hasOutlet?: boolean;
   description?: string;
+  hasWifi?: boolean;
+  priceRange?: string;
 }
 
 // TODO: API 연동 시 교체

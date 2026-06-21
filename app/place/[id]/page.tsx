@@ -201,6 +201,8 @@ export default function PlaceDetailPage({ params }: { params: Promise<{ id: stri
                 <div style={{ height: 1, background: "#e8e8e8", margin: "8px 0" }} />
                 {[
                   { label: "콘센트", value: place.hasOutlet === true ? "있음" : place.hasOutlet === false ? "없음" : "정보 없음", icon: "⚡" },
+                  { label: "와이파이", value: place.hasWifi === true ? "있음" : place.hasWifi === false ? "없음" : "정보 없음", icon: "📶" },
+                  { label: "가격대", value: place.priceRange ?? "정보 없음", icon: "💰" },
                 ].map((row, i, arr) => (
                   <div key={i}>
                     <div style={{ display: "flex", alignItems: "center", padding: "10px 0", gap: 16 }}>
