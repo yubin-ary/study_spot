@@ -93,26 +93,10 @@ export default function DistancePageClient() {
 
           {/* Search button */}
           <button
-            onClick={async () => {
+            onClick={() => {
               if (selected === null || submitting) return;
-              setSubmitting(true);
-              const distanceLabel = options[selected].label;
-              sessionStorage.setItem("spotyu_distance", distanceLabel);
-              const purpose = sessionStorage.getItem("spotyu_purpose") ?? "";
-              const duration = sessionStorage.getItem("spotyu_duration") ?? "";
-              try {
-                const res = await fetch("/api/recommend", {
-                  method: "POST",
-                  headers: { "Content-Type": "application/json" },
-                  body: JSON.stringify({ purpose, duration, distance: distanceLabel }),
-                });
-                const data = await res.json();
-                sessionStorage.setItem("spotyu_recommended_ids", JSON.stringify(data.ids ?? []));
-              } catch {
-                // API 실패 시 빈 배열 저장 → 지도에서 전체 장소 표시하되 배너는 유지
-                sessionStorage.setItem("spotyu_recommended_ids", JSON.stringify([]));
-              }
-              router.push("/status/loading");
+              sessionStorage.setItem("spotyu_distance", options[selected].label);
+              router.push("/status/condition");
             }}
             className="absolute flex items-center justify-center rounded-[10px]"
             style={{

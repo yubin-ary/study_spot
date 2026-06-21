@@ -188,9 +188,9 @@ export default function KakaoMapView({
     if (glowOverlayRef.current) glowOverlayRef.current.setMap(null);
 
     const glowHtml = `
-      <div style="position:relative;width:46px;height:46px;transform:translate(-50%,-50%)">
-        <img src="/assets/4fa12631f27ca7d087de38c1353cb4f45f04be7d.svg" style="position:absolute;inset:0;width:100%;height:100%" />
-        <img src="/assets/843fddce33436a5e7f0e81dd97a38b99e6cbe657.svg" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:10px;height:10px" />
+      <div style="position:relative;width:46px;height:46px;border-radius:23px;background:rgba(255,191,0,0.2);transform:translate(-50%,-50%);">
+        <img src="/assets/4fa12631f27ca7d087de38c1353cb4f45f04be7d.svg" style="position:absolute;left:16px;top:16px;width:14px;height:14px;display:block;" />
+        <img src="/assets/843fddce33436a5e7f0e81dd97a38b99e6cbe657.svg" style="position:absolute;left:18px;top:18px;width:10px;height:10px;display:block;" />
       </div>
     `;
     const overlay = new window.kakao.maps.CustomOverlay({ position: pos, content: glowHtml, zIndex: 20 });

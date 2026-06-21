@@ -18,7 +18,7 @@ export default function SplashPage() {
   }, [router]);
 
   return (
-    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "100vh", background: "#e5e5e5" }}>
+    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "100vh", background: "#f3f4f6" }}>
       <div style={{ width: 390, height: 844, position: "relative" }}>
         <div
           className="border-2 border-[#111] border-solid overflow-clip relative rounded-[25px]"

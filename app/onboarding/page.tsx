@@ -5,14 +5,12 @@ import { useRouter } from "next/navigation";
 
 const ILLUSTRATION = "/assets/2f4104ed00626a5de703f34eb551e9f802923d56.png";
 const HILL_SVG = "/assets/2b7cb77738f8586c7f8c6e76ae6e9af45b3ec7e5.svg";
-const STATUS_ICONS = "/assets/b655a4944c744b18f533b9c4e87522b5f1e0f728.svg";
 
 const slides = [
   {
     title: "오늘은 어디서 공부하지?",
     titleLines: ["오늘은 어디서 공부하지?"],
     desc: ["장소를 찾느라 공부 시간을", "낭비하고 있진 않나요?"],
-    // container: w=255.847 h=321.69 rotate=-9.99, img: h=156.73% left=0 top=0 w=295.59%
     illustration: {
       containerW: 256,
       containerH: 322,
@@ -78,7 +76,7 @@ export default function OnboardingPage() {
     if (touchStartX.current === null) return;
     const dx = e.changedTouches[0].clientX - touchStartX.current;
     if (dx < -40 && current < slides.length - 1) setCurrent(current + 1);
-    if (dx > 40 && current > 0) setCurrent(current - 1);
+    else if (dx > 40 && current > 0) setCurrent(current - 1);
     touchStartX.current = null;
   }
 
@@ -197,7 +195,6 @@ export default function OnboardingPage() {
           {slide.button}
         </button>
 
-        {/* Home Indicator */}
       </div>
     </div>
   );

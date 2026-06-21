@@ -413,7 +413,7 @@ export default function MapPageClient() {
 
 
   return (
-    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "100vh", background: "#e5e5e5" }}>
+    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "100vh", background: "#f3f4f6" }}>
       <div style={{ width: 390, height: 844, position: "relative" }}>
         <div style={{ width: "100%", height: "100%", border: "2px solid #111", borderRadius: 25, overflow: "hidden", position: "relative", background: "#fff" }}>
 

@@ -114,7 +114,7 @@ export default function PlaceDetailPage({ params }: { params: Promise<{ id: stri
   // 데이터가 아직 안 왔으면 로딩 표시
   if (!place) {
     return (
-      <div style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "100vh", background: "#e5e5e5" }}>
+      <div style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "100vh", background: "#f3f4f6" }}>
         <p style={{ color: "#999", fontSize: 14 }}>불러오는 중...</p>
       </div>
     );
@@ -123,7 +123,7 @@ export default function PlaceDetailPage({ params }: { params: Promise<{ id: stri
   const cat = CATEGORY_COLORS[place.category] ?? { bg: "#f0f0f0", text: "#666" };
 
   return (
-    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "100vh", background: "#e5e5e5" }}>
+    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "100vh", background: "#f3f4f6" }}>
       <div style={{ width: 390, height: 844, position: "relative" }}>
         <div style={{ width: "100%", height: "100%", border: "2px solid #111", borderRadius: 25, overflow: "hidden", position: "relative", background: "#fff" }}>
 
