@@ -28,13 +28,13 @@ export default function PurposePage() {
         <div className="pf-frame bg-[#f8f8f8] border-2 border-[#111] border-solid overflow-clip rounded-[25px]"
           style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column" }}>
 
-          <div style={{ flexShrink: 0, position: "relative", height: 101, paddingTop: 45 }}>
+          <div style={{ flexShrink: 0, position: "relative", height: 121, paddingTop: 13 }}>
             {showBack && (
-              <button onClick={() => router.back()} style={{ position: "absolute", left: 32, top: 52, width: 28, height: 28, background: "none", border: "none", padding: 0, cursor: "pointer" }}>
+              <button onClick={() => router.back()} style={{ position: "absolute", left: 20, top: 20, width: 28, height: 28, background: "none", border: "none", padding: 0, cursor: "pointer" }}>
                 <img alt="back" style={{ width: "100%", height: "100%", display: "block" }} src={imgBackArrow} />
               </button>
             )}
-            <p style={{ textAlign: "center", fontSize: 22, fontWeight: 500, color: "#111", lineHeight: 1.5, marginTop: 14 }}>추천</p>
+            <p style={{ position: "absolute", top: 20, left: 0, right: 0, textAlign: "center", fontSize: 22, fontWeight: 500, color: "#111", lineHeight: 1.3 }}>추천</p>
           </div>
 
           <div style={{ flexShrink: 0, padding: "0 21px 20px" }}>
