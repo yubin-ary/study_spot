@@ -1,73 +1,79 @@
+"use client";
+
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import SplashStartButton from "./SplashStartButton";
 
-const imgHill = "/assets/e4d5f9c1430b0b30a1eb7593dfe8f415ce5a0f83.svg";
-const imgStatusIcons = "/assets/b655a4944c744b18f533b9c4e87522b5f1e0f728.svg";
+const imgIllustration = "/assets/2f4104ed00626a5de703f34eb551e9f802923d56.png";
+const imgHill          = "/assets/7c24e1614bef5f8590527308836259710db124d0.svg";
+const imgStatusIcons   = "/assets/cf8adf0c371ee4bab6d9c27869714c5a52b939c5.svg";
 
 export default function SplashPage() {
+  const router = useRouter();
+
+  useEffect(() => {
+    if (localStorage.getItem("spotyu_visited")) {
+      router.replace("/map");
+    }
+  }, [router]);
+
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100">
+    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "100vh", background: "#e5e5e5" }}>
       <div style={{ width: 390, height: 844, position: "relative" }}>
-        {/* Phone frame — exact Figma styles */}
         <div
           className="border-2 border-[#111] border-solid overflow-clip relative rounded-[25px]"
           style={{
-            width: "100%",
-            height: "100%",
+            width: "100%", height: "100%",
             backgroundImage:
               "linear-gradient(180deg, rgba(255, 255, 255, 0.2) 42.536%, rgba(255, 195, 17, 0.1) 118.84%), linear-gradient(90deg, rgb(255, 255, 255) 0%, rgb(255, 255, 255) 100%)",
           }}
         >
-          {/* Hill illustration */}
-          <div className="absolute" style={{ left: -60, top: 627, width: 460, height: 310 }}>
-            <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgHill} />
+          {/* 하단 모래언덕 */}
+          <div style={{ position: "absolute", left: -64, top: 613, width: 460, height: 310 }}>
+            <img alt="" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", display: "block" }} src={imgHill} />
           </div>
 
-          {/* Status bar */}
-          <div
-            className="absolute overflow-clip"
-            style={{ top: 0, left: "50%", transform: "translateX(-50%)", width: 388, height: 43 }}
-          >
-            <div className="absolute" style={{ right: 24, top: 16.33, width: 64.341, height: 11.337 }}>
-              <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgStatusIcons} />
+          {/* 상태바 */}
+          <div style={{ position: "absolute", top: 0, left: "50%", transform: "translateX(-50%)", width: 388, height: 43, overflow: "hidden" }}>
+            <div style={{ position: "absolute", right: 24, top: 16.33, width: 64.341, height: 11.337 }}>
+              <img alt="" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", display: "block" }} src={imgStatusIcons} />
             </div>
-            <p
-              className="absolute text-center"
-              style={{
-                left: "50%",
-                transform: "translateX(-50%)",
-                top: 12,
-                width: 52.121,
-                height: 20,
-                fontSize: 15,
-                fontWeight: 600,
-                lineHeight: "20px",
-                letterSpacing: "-0.5px",
-                color: "#111",
-              }}
-            >
+            <p style={{ position: "absolute", left: "50%", transform: "translateX(-50%)", top: 12, width: 52, height: 20, fontSize: 15, fontWeight: 600, lineHeight: "20px", letterSpacing: "-0.5px", color: "#111", textAlign: "center", margin: 0 }}>
               9:41
             </p>
           </div>
 
-
-          {/* Start button */}
-          <SplashStartButton />
-
-          {/* Subtitle text */}
-          <p
-            className="absolute whitespace-nowrap"
-            style={{
-              left: 43,
-              top: 314,
-              fontSize: 16,
-              fontWeight: 500,
-              color: "#000",
-              letterSpacing: "-0.4px",
-              lineHeight: 1.5,
-            }}
-          >
-            맞춤형 공부 장소 추천 서비스
+          {/* SPOTYU 타이틀 — 그라디언트 */}
+          <p style={{
+            position: "absolute", left: 32, top: 130,
+            fontSize: 62.6, fontWeight: 900,
+            letterSpacing: "-1.565px", lineHeight: 1.5,
+            whiteSpace: "nowrap", margin: 0,
+            backgroundImage: "linear-gradient(-45.5deg, rgba(255, 191, 0, 0.2) 28.7%, rgba(255, 77, 0, 0.2) 78.5%), linear-gradient(90deg, rgb(255, 191, 0) 0%, rgb(255, 191, 0) 100%)",
+            WebkitBackgroundClip: "text",
+            WebkitTextFillColor: "transparent",
+            backgroundClip: "text",
+          }}>
+            SPOTYU
           </p>
+
+          {/* 서브타이틀 */}
+          <p style={{ position: "absolute", left: 32, top: 224, fontSize: 16, fontWeight: 600, color: "#525252", letterSpacing: "-0.4px", lineHeight: 1.5, whiteSpace: "nowrap", margin: 0 }}>
+            최적의 공부스팟을 찾아주는 서비스
+          </p>
+
+          {/* 일러스트레이션 */}
+          <div style={{ position: "absolute", left: 38, top: 248, width: 310, height: 372, overflow: "hidden" }}>
+            <img alt="" style={{ position: "absolute", height: "164.42%", left: "-97.77%", top: "-3.85%", width: "295.59%", maxWidth: "none" }} src={imgIllustration} />
+          </div>
+
+          {/* 홈 인디케이터 */}
+          <div style={{ position: "absolute", bottom: -2, left: "50%", transform: "translateX(-50%)", width: 390, height: 34, overflow: "hidden" }}>
+            <div style={{ position: "absolute", bottom: 8, left: "50%", transform: "translateX(-50%)", width: 134, height: 5, borderRadius: 100, background: "#111" }} />
+          </div>
+
+          {/* 시작하기 버튼 */}
+          <SplashStartButton />
         </div>
       </div>
     </div>

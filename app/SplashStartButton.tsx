@@ -7,7 +7,7 @@ export default function SplashStartButton() {
 
   return (
     <button
-      onClick={() => router.push("/onboarding")}
+      onClick={() => { localStorage.setItem("spotyu_visited", "1"); router.push("/onboarding"); }}
       className="absolute flex items-center justify-center rounded-[10px] cursor-pointer"
       style={{
         left: 24,
