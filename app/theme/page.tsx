@@ -238,7 +238,7 @@ export default function ThemePage() {
           </div>
 
           {/* Nav – 지도 페이지와 동일한 스타일 */}
-          <div className="absolute" style={{ left: 0, right: 0, top: 745, height: 63 }}>
+          <div className="absolute" style={{ left: 0, right: 0, bottom: 0, height: 63 }}>
             <div style={{ position: "absolute", left: -10, right: -10, top: -7, height: 70 }}>
               <img src={imgNavBg} alt="" style={{ width: "100%", height: "100%", display: "block" }} />
             </div>
