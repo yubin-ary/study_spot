@@ -84,7 +84,7 @@ function toPlace(api: ApiPlace): Place {
     description: api.description,
     islandTheme: api.theme,
     hasWifi: api.id % 5 !== 0,
-    priceRange: ["무료", "2,000원~5,000원", "3,000원~6,000원", "5,000원~10,000원", "10,000원 이상"][api.id % 5],
+    priceRange: ["2,000원~5,000원", "3,000원~6,000원", "5,000원~10,000원", "10,000원 이상"][api.id % 4],
   };
 }
 
