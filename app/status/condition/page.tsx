@@ -42,7 +42,7 @@ export default function ConditionPage() {
             <button onClick={() => router.back()} style={{ position: "absolute", left: 20, top: 20, width: 28, height: 28, background: "none", border: "none", padding: 0, cursor: "pointer" }}>
               <img alt="back" style={{ width: "100%", height: "100%", display: "block" }} src={imgBackArrow} />
             </button>
-            <p style={{ position: "absolute", top: 20, left: 0, right: 0, textAlign: "center", fontSize: 22, fontWeight: 500, color: "#111", lineHeight: 1.3 }}>추천</p>
+            <p style={{ position: "absolute", top: 20, left: 0, right: 0, textAlign: "center", fontSize: 22, fontWeight: 500, color: "#111", lineHeight: 1.3, pointerEvents: "none" }}>추천</p>
           </div>
 
           {/* Step + Question */}
