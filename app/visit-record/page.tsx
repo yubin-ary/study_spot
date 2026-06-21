@@ -72,6 +72,9 @@ export default function VisitRecordPage() {
   const [seat, setSeat] = useState("");
   const [noise, setNoise] = useState("");
   const [keywords, setKeywords] = useState<string[]>([]);
+  const [customKeywords, setCustomKeywords] = useState<string[]>([]);
+  const [showCustomInput, setShowCustomInput] = useState(false);
+  const [customInput, setCustomInput] = useState("");
 
   const firstDay = new Date(year, month, 1).getDay();
   const daysInMonth = new Date(year, month + 1, 0).getDate();
@@ -187,12 +190,30 @@ export default function VisitRecordPage() {
             </div>
 
             <p style={{ fontSize: 14, fontWeight: 600, color: "#333", marginTop: 24 }}>공간 키워드는?</p>
-            <div style={{ marginTop: 10 }}>
-              <KeywordGroup
-                options={["콘센트 많음", "집중 잘됨", "가성비", "팀플 가능", "분위기 좋음"]}
-                selected={keywords}
-                onToggle={toggleKeyword}
-              />
+            <div style={{ marginTop: 10, display: "flex", gap: 8, flexWrap: "wrap" }}>
+              {["콘센트 많음", "집중 잘됨", "가성비", "팀플 가능", "분위기 좋음"].map((opt) => {
+                const active = keywords.includes(opt);
+                return (
+                  <button key={opt} onClick={() => toggleKeyword(opt)} style={{ background: active ? "#ffc933" : "#f4f4f4", color: active ? "#3a2e10" : "#888", border: "none", borderRadius: 18, padding: "8px 16px", fontSize: 13, fontWeight: active ? 700 : 500, cursor: "pointer", letterSpacing: "-0.3px" }}>
+                    {opt}
+                  </button>
+                );
+              })}
+              {customKeywords.map((kw) => (
+                <button key={kw} onClick={() => setCustomKeywords((prev) => prev.filter((x) => x !== kw))} style={{ background: "#ffc933", color: "#3a2e10", border: "none", borderRadius: 18, padding: "8px 16px", fontSize: 13, fontWeight: 700, cursor: "pointer", letterSpacing: "-0.3px" }}>
+                  {kw} ×
+                </button>
+              ))}
+              {showCustomInput ? (
+                <form onSubmit={(e) => { e.preventDefault(); const val = customInput.trim(); if (val && !customKeywords.includes(val)) setCustomKeywords((prev) => [...prev, val]); setCustomInput(""); setShowCustomInput(false); }} style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                  <input autoFocus value={customInput} onChange={(e) => setCustomInput(e.target.value)} placeholder="키워드 입력" style={{ border: "1.5px solid #ffc933", borderRadius: 18, padding: "7px 14px", fontSize: 13, outline: "none", letterSpacing: "-0.3px", color: "#333", background: "#fff", width: 110 }} />
+                  <button type="submit" style={{ background: "#ffc933", border: "none", borderRadius: 18, padding: "8px 14px", fontSize: 13, fontWeight: 700, color: "#3a2e10", cursor: "pointer" }}>추가</button>
+                </form>
+              ) : (
+                <button onClick={() => setShowCustomInput(true)} style={{ width: 36, height: 36, borderRadius: 18, background: "#f4f4f4", border: "none", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", flexShrink: 0 }}>
+                  <span style={{ fontSize: 18, color: "#888", lineHeight: 1 }}>+</span>
+                </button>
+              )}
             </div>
           </div>
 
