@@ -261,7 +261,7 @@ export default function BookmarksPage() {
             <div style={{ position: "absolute", left: -2, right: -2, top: -7, height: 70 }}>
               <img src={imgNavBg} alt="" style={{ width: "100%", height: "100%", display: "block" }} />
             </div>
-            <div style={{ position: "relative", display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", alignItems: "center", height: "100%", padding: "4px 0 0 0" }}>
+            <div style={{ position: "relative", display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", alignItems: "center", height: "100%", padding: "20px 0 0 0" }}>
               {NAV_ITEMS.map((item) => {
                 const active = item.label === "보물함";
                 const color = active ? "#525252" : "#aeaeae";

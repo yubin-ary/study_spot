@@ -501,11 +501,11 @@ export default function MapPageClient() {
           {/* Filter bar – 추천 (left=21) + 보물함 (left=calc(50%+75px)=270px) */}
           <div style={{ position: "absolute", top: 162, left: 0, right: 0, zIndex: 20 }}>
             <button
-              onClick={restoreRecommendation}
+              onClick={() => recommendedIds !== null ? dismissRecommendation() : restoreRecommendation()}
               style={{
                 position: "absolute", left: 21,
-                background: recommendedIds !== null ? "#ffbf00" : "#fff2cb",
-                border: "1px solid #ffbf00", borderRadius: 20,
+                background: recommendedIds !== null ? "#fff2cb" : "#fff",
+                border: recommendedIds !== null ? "1px solid #ffbf00" : "none", borderRadius: 20,
                 padding: "6px 20px", fontSize: 12, fontWeight: 500, color: "#525252",
                 letterSpacing: "-0.3px", cursor: "pointer",
                 boxShadow: "0px 2px 2px rgba(0,0,0,0.2)",
@@ -518,7 +518,9 @@ export default function MapPageClient() {
               <button
                 onClick={() => setIsFilterOpen(!isFilterOpen)}
                 style={{
-                  background: "#fff", border: "none", borderRadius: 20,
+                  background: selectedFilter !== "전체 보물함" ? "#fff2cb" : "#fff",
+                  border: selectedFilter !== "전체 보물함" ? "1px solid #ffbf00" : "none",
+                  borderRadius: 20,
                   padding: "6px 20px", fontSize: 12, fontWeight: 500, color: "#767676",
                   letterSpacing: "-0.3px", cursor: "pointer",
                   boxShadow: "0px 2px 2px rgba(0,0,0,0.2)",
@@ -653,7 +655,7 @@ export default function MapPageClient() {
               gridTemplateColumns: "1fr 1fr 1fr 1fr",
               alignItems: "center",
               height: "100%",
-              padding: "4px 0 0 0",
+              padding: "20px 0 0 0",
             }}>
               {NAV_ITEMS.map(({ label, Icon, active, href }) => (
                 <button
