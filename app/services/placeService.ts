@@ -84,14 +84,14 @@ function toPlace(api: ApiPlace): Place {
 }
 
 export async function getPlaces(): Promise<Place[]> {
-  const res = await fetch(`${BASE_URL}/api/places`);
+  const res = await fetch(`${BASE_URL}/SPOTYU/places`);
   if (!res.ok) throw new Error(`장소 목록을 불러오지 못했어요 (${res.status})`);
   const data: ApiPlace[] = await res.json();
   return data.map(toPlace);
 }
 
 export async function getPlace(placeId: number): Promise<Place> {
-  const res = await fetch(`${BASE_URL}/api/places/${placeId}`);
+  const res = await fetch(`${BASE_URL}/SPOTYU/places/${placeId}`);
   if (!res.ok) throw new Error(`장소 정보를 불러오지 못했어요 (${res.status})`);
   const data: ApiPlace = await res.json();
   return toPlace(data);
