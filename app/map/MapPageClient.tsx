@@ -594,7 +594,7 @@ export default function MapPageClient() {
               bottom: 0,
               background: "#fff",
               borderRadius: "35px 35px 0 0",
-              boxShadow: "0px 2px 12px rgba(0,0,0,0.12)",
+              boxShadow: "0px -1px 6px rgba(0,0,0,0.06)",
               zIndex: sheetZIndex,
               transition: isSnapping ? "top 0.3s cubic-bezier(0.25,0.46,0.45,0.94)" : "none",
               display: "flex",
@@ -633,14 +633,14 @@ export default function MapPageClient() {
                 <PlaceDetailCard place={selectedPlace} onClose={() => setSelectedPlace(null)} onDetailClick={() => router.push(`/place/${selectedPlace.id}`)} />
               ) : (
                 filteredPlaces.map((place) => (
-                  <PlaceCard key={place.id} place={place} onClick={() => setSelectedPlace(place)} onDetailClick={() => router.push(`/place/${place.id}`)} />
+                  <PlaceCard key={place.id} place={place} onClick={() => setSelectedPlace(place)} onDetailClick={() => setSelectedPlace(place)} />
                 ))
               )}
             </div>
           </div>
 
           {/* Solid white base behind nav – covers sheet content bleeding through */}
-          <div style={{ position: "absolute", left: 0, top: 738, right: 0, bottom: -2, background: "#fff", zIndex: 24 }} />
+          <div style={{ position: "absolute", left: 0, top: 745, right: 0, bottom: -2, background: "#fff", zIndex: 24 }} />
 
           {/* Bottom navigation – top=745, height=63 */}
           <div style={{ position: "absolute", left: 0, right: 0, top: 745, height: 63, zIndex: 25 }}>

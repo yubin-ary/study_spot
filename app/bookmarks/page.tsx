@@ -35,10 +35,10 @@ function IconIsland({ color }: { color: string }) {
     </svg>
   );
 }
-function IconBookmark({ color, filled }: { color: string; filled?: boolean }) {
+function IconBookmark({ color }: { color: string }) {
   return (
     <svg width="14" height="17" viewBox="0 0 14 17" fill="none">
-      <path d="M2 1.5h10v14L7 12 2 15.5V1.5Z" stroke={color} strokeWidth="1.4" strokeLinejoin="round" fill={filled ? color : "none"} />
+      <path d="M2 1.5h10v14L7 12 2 15.5V1.5Z" stroke={color} strokeWidth="1.4" strokeLinejoin="round" fill="none" />
     </svg>
   );
 }
@@ -272,7 +272,7 @@ export default function BookmarksPage() {
                     style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 0, background: "none", border: "none", cursor: "pointer", padding: 0 }}
                   >
                     {item.label === "보물함"
-                      ? <IconBookmark color={color} filled={active} />
+                      ? <IconBookmark color={color} />
                       : <item.Icon color={color} />}
                     <span style={{ fontSize: 14, fontWeight: 500, color, letterSpacing: "-0.35px", lineHeight: 1.5, marginTop: 1 }}>{item.label}</span>
                   </button>

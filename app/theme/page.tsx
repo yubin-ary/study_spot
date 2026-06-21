@@ -182,7 +182,7 @@ export default function ThemePage() {
                   }}
                 >
                   <p style={{ fontSize: 21, fontWeight: 800, color: "#3a2e10", letterSpacing: "-0.5px" }}>{isl.type}</p>
-                  <p style={{ marginTop: 6, fontSize: 12, fontWeight: 500, color: "#6b5a28", letterSpacing: "-0.3px" }}>{isl.subtitle}</p>
+                  <p style={{ marginTop: 6, fontSize: 12, fontWeight: 600, color: "#6b5a28", letterSpacing: "-0.3px" }}>{isl.subtitle}</p>
 
                   <div style={{ marginTop: 16, width: 200, height: 170, display: "flex", alignItems: "center", justifyContent: "center" }}>
                     <img src={isl.image} alt={isl.type} style={{ width: "100%", height: "100%", objectFit: "contain" }} />
