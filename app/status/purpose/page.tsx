@@ -28,7 +28,7 @@ export default function PurposePage() {
         <div className="pf-frame bg-[#f8f8f8] border-2 border-[#111] border-solid overflow-clip rounded-[25px]"
           style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column" }}>
 
-          <div style={{ flexShrink: 0, position: "relative", height: 121, paddingTop: 13 }}>
+          <div style={{ flexShrink: 0, position: "relative", height: 101, paddingTop: 13 }}>
             {showBack && (
               <button onClick={() => router.back()} style={{ position: "absolute", left: 20, top: 20, width: 28, height: 28, background: "none", border: "none", padding: 0, cursor: "pointer" }}>
                 <img alt="back" style={{ width: "100%", height: "100%", display: "block" }} src={imgBackArrow} />

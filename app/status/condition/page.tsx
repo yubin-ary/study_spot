@@ -38,7 +38,7 @@ export default function ConditionPage() {
           style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column" }}>
 
           {/* Header */}
-          <div style={{ flexShrink: 0, position: "relative", height: 121, paddingTop: 13 }}>
+          <div style={{ flexShrink: 0, position: "relative", height: 101, paddingTop: 13 }}>
             <button onClick={() => router.back()} style={{ position: "absolute", left: 20, top: 20, width: 28, height: 28, background: "none", border: "none", padding: 0, cursor: "pointer" }}>
               <img alt="back" style={{ width: "100%", height: "100%", display: "block" }} src={imgBackArrow} />
             </button>
