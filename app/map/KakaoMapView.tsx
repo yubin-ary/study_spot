@@ -19,7 +19,7 @@ interface KakaoMapViewProps {
   centerTrigger?: number;
 }
 
-const VISIBLE_MAP_TOP = 194; // 필터바 하단
+const VISIBLE_MAP_TOP = 158; // 필터바 하단
 const MAP_HEIGHT = 844;
 
 function getVisibleCenterOffset(sheetTop: number): number {

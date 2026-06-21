@@ -477,7 +477,7 @@ export default function MapPageClient() {
 
 
           {/* Header – SPOTYU + bell + person SVG icons */}
-          <div style={{ position: "absolute", top: 43, left: 0, width: 390, height: 46, zIndex: 20, display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 24px", boxSizing: "border-box" }}>
+          <div style={{ position: "absolute", top: 20, left: 0, right: 0, height: 46, zIndex: 20, display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 24px", boxSizing: "border-box" }}>
             <p style={{ fontSize: 23, fontWeight: 900, color: "#ffbf00", letterSpacing: "-0.575px", lineHeight: 1.5, whiteSpace: "nowrap" }}>
               SPOTYU
             </p>
@@ -488,7 +488,7 @@ export default function MapPageClient() {
           </div>
 
           {/* Search bar */}
-          <div style={{ position: "absolute", top: 106, left: "50%", transform: "translateX(-50%)", width: 342, zIndex: 20 }}>
+          <div style={{ position: "absolute", top: 76, left: "50%", transform: "translateX(-50%)", width: 342, zIndex: 20 }}>
             <div style={{ background: "#fff", borderRadius: 100, boxShadow: "0px 2px 2px rgba(0,0,0,0.2)", display: "flex", alignItems: "center", padding: "11px 16px", gap: 8 }}>
               <span style={{ fontSize: 17, color: "#767676" }}>🔍</span>
               <input
@@ -507,7 +507,7 @@ export default function MapPageClient() {
           </div>
 
           {/* Filter bar – 추천 (left=21) + 보물함 (left=calc(50%+75px)=270px) */}
-          <div style={{ position: "absolute", top: 162, left: 0, right: 0, zIndex: 20 }}>
+          <div style={{ position: "absolute", top: 126, left: 0, right: 0, zIndex: 20 }}>
             <button
               onClick={() => recommendedIds !== null ? dismissRecommendation() : restoreRecommendation()}
               style={{
